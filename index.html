@@ -3,48 +3,55 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Racha — Divisão de Contas (claro)</title>
-  <meta name="theme-color" content="#0b1220"/>
+  <title>Racha — Divisão de Contas (Moss)</title>
+  <meta name="theme-color" content="#0b1410"/>
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#0f1730;
-      --card2:#101a33;
-      --text:#e9efff;
-      --muted:#a9b7d6;
+      /* Base (moss / money) */
+      --bg:#0b1410;
+      --card:#0f1d16;
+      --card2:#12251b;
+      --text:#eef7f0;
+      --muted:#b8cbbb;
+
+      /* Contrast lines/shadow */
       --line:rgba(255,255,255,.12);
-      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --shadow:0 12px 30px rgba(0,0,0,.40);
       --r:16px;
 
-      --blue:#60a5fa;
-      --green:#22c55e;
-      --orange:#f97316;
+      /* Accents */
+      --moss:#4b7a4b;
+      --moss2:#2f5f3f;
+      --gold:#d4b46a;   /* “dinheiro” */
       --red:#ef4444;
-      --purple:#a78bfa;
+      --blue:#4ea3ff;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:
-        radial-gradient(900px 650px at 10% -10%, rgba(96,165,250,.22), transparent 55%),
-        radial-gradient(900px 650px at 95% 0%, rgba(167,139,250,.20), transparent 55%),
-        radial-gradient(900px 700px at 40% 110%, rgba(34,197,94,.16), transparent 55%),
+        radial-gradient(900px 650px at 12% -10%, rgba(75,122,75,.22), transparent 55%),
+        radial-gradient(900px 650px at 95% 0%, rgba(212,180,106,.16), transparent 55%),
+        radial-gradient(900px 700px at 45% 110%, rgba(46,163,255,.10), transparent 55%),
         var(--bg);
       color:var(--text);
     }
+
     .wrap{max-width:1100px;margin:0 auto;padding:16px 14px 40px}
+
     header{
       display:flex; gap:12px; align-items:center; justify-content:space-between;
       position:sticky; top:0; z-index:20;
       padding:12px 0 10px;
       backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(11,18,32,.85), rgba(11,18,32,.45));
+      background: linear-gradient(to bottom, rgba(11,20,16,.86), rgba(11,20,16,.46));
     }
     .brand{display:flex;gap:12px;align-items:center}
     .logo{
       width:40px;height:40px;border-radius:14px;
-      background: conic-gradient(from 210deg, var(--blue), var(--purple), var(--green), var(--orange), var(--blue));
+      background: conic-gradient(from 210deg, var(--moss), var(--gold), var(--moss2), var(--blue), var(--moss));
       box-shadow: 0 10px 26px rgba(0,0,0,.45);
     }
     h1{font-size:16px;margin:0}
@@ -64,15 +71,19 @@
     input, select{
       width:100%;
       border:1px solid var(--line);
-      background: rgba(15,23,48,.75);
+      background: rgba(18,37,27,.75);
       color:var(--text);
       border-radius: 12px;
       padding:11px 12px;
       outline:none;
     }
+    input::placeholder{color:rgba(238,247,240,.55)}
     input[type="date"]{padding:10px 12px}
+
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
     .row > *{flex:1}
+
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
     .btn{
       border:1px solid var(--line);
@@ -80,7 +91,7 @@
       color:var(--text);
       border-radius: 12px;
       padding:11px 12px;
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       transition:.15s transform,.15s opacity;
       user-select:none;
@@ -88,46 +99,35 @@
     }
     .btn:hover{transform:translateY(-1px)}
     .btn:active{transform:translateY(0)}
-    .btn.primary{background: linear-gradient(135deg, rgba(96,165,250,.30), rgba(167,139,250,.20)); border-color: rgba(96,165,250,.35)}
-    .btn.good{background: linear-gradient(135deg, rgba(34,197,94,.26), rgba(96,165,250,.12)); border-color: rgba(34,197,94,.35)}
-    .btn.bad{background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(167,139,250,.08)); border-color: rgba(239,68,68,.38)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(75,122,75,.34), rgba(212,180,106,.20));
+      border-color: rgba(212,180,106,.35);
+    }
+    .btn.good{
+      background: linear-gradient(135deg, rgba(47,95,63,.40), rgba(75,122,75,.18));
+      border-color: rgba(75,122,75,.40);
+    }
+    .btn.bad{
+      background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(212,180,106,.08));
+      border-color: rgba(239,68,68,.38);
+    }
     .btn.ghost{background: transparent}
-
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
     .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
     .tab{
       padding:9px 12px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.05);cursor:pointer;font-weight:900;font-size:12px;
+      background:rgba(255,255,255,.05);cursor:pointer;font-weight:1000;font-size:12px;
     }
-    .tab.active{border-color:rgba(96,165,250,.50); background: rgba(96,165,250,.18)}
+    .tab.active{border-color:rgba(212,180,106,.55); background: rgba(212,180,106,.14)}
     .hide{display:none}
 
     .hr{height:1px;background:var(--line);margin:12px 0}
     .tiny{font-size:12px;color:var(--muted);line-height:1.45}
 
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
-    th{color:var(--muted);font-size:12px;font-weight:900}
-    .t-actions{display:flex;gap:8px;justify-content:flex-end}
-    .mini{
-      padding:7px 10px;border-radius:10px;font-size:12px;font-weight:900;
-      background: rgba(255,255,255,.06); border:1px solid var(--line); cursor:pointer;
-    }
-    .badge{
-      display:inline-flex; align-items:center;
-      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:900;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.05);
-    }
-    .pos{color:#a7f3d0;border-color: rgba(34,197,94,.35)}
-    .neg{color:#fecaca;border-color: rgba(239,68,68,.35)}
-    .zero{color:var(--muted)}
-
     .members{
       display:flex; flex-wrap:wrap; gap:10px;
       border:1px solid var(--line);
-      background: rgba(15,23,48,.55);
+      background: rgba(18,37,27,.55);
       border-radius: 14px;
       padding:10px;
     }
@@ -144,8 +144,28 @@
       width:62px;
       padding:6px 8px;
       border-radius:10px;
-      font-weight:900;
+      font-weight:1000;
     }
+
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
+    th{color:var(--muted);font-size:12px;font-weight:1000}
+    .t-actions{display:flex;gap:8px;justify-content:flex-end}
+    .mini{
+      padding:7px 10px;border-radius:10px;font-size:12px;font-weight:1000;
+      background: rgba(255,255,255,.06); border:1px solid var(--line); cursor:pointer;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center;
+      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:1000;
+      border:1px solid rgba(212,180,106,.35);
+      background: rgba(212,180,106,.10);
+      color: var(--text);
+    }
+    .pos{color:#b7f3c9;border-color: rgba(75,122,75,.55)}
+    .neg{color:#fecaca;border-color: rgba(239,68,68,.45)}
+    .zero{color:var(--muted);border-color: rgba(255,255,255,.14)}
 
     .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     @media (max-width:560px){.kpi{grid-template-columns:1fr}}
@@ -155,14 +175,22 @@
       padding:12px;
       background: rgba(255,255,255,.04);
     }
-    .kpi .v{font-size:18px;font-weight:1000}
+    .kpi .v{font-size:18px;font-weight:1100}
     .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .req{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(212,180,106,.35);
+      background: rgba(212,180,106,.10);
+      padding:8px 10px;border-radius:12px;margin-bottom:10px;
+      font-size:12px;color:var(--text);font-weight:900;
+    }
 
     .toast{
       position:fixed; left:50%; transform:translateX(-50%);
       bottom:16px; z-index:50;
-      background: rgba(15,23,48,.95);
-      border:1px solid var(--line);
+      background: rgba(18,37,27,.96);
+      border:1px solid rgba(212,180,106,.28);
       color:var(--text);
       padding:10px 12px; border-radius: 12px;
       box-shadow: var(--shadow);
@@ -179,30 +207,29 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Racha — Divisão de Contas</h1>
-        <div class="sub">Claro • Leve • Compartilhável por link • Offline</div>
+        <div class="sub">Tema musgo / dinheiro • Compartilhável por link • Offline</div>
       </div>
     </div>
-
     <div class="top-actions">
-      <button class="btn primary" id="btnShare">Compartilhar link</button>
-      <button class="btn" id="btnExport">Exportar</button>
-      <button class="btn" id="btnImport">Importar</button>
-      <button class="btn bad" id="btnReset">Resetar</button>
+      <button class="btn primary" id="btnShare" type="button">Compartilhar link</button>
+      <button class="btn" id="btnExport" type="button">Exportar</button>
+      <button class="btn" id="btnImport" type="button">Importar</button>
+      <button class="btn bad" id="btnReset" type="button">Resetar</button>
     </div>
   </header>
 
   <div class="card">
     <div class="row">
       <div style="flex:1.2">
-        <label>Nome do grupo</label>
-        <input id="groupName" placeholder="Ex.: Airbnb, Viagem, Churrasco"/>
+        <label>Nome do grupo (ex.: “Viagem Holanda”, “Airbnb”, “Churrasco”)</label>
+        <input id="groupName" placeholder="Ex.: Viagem • Airbnb • Jantar da turma" autocomplete="off"/>
       </div>
       <div>
         <label>Moeda</label>
         <select id="currency">
-          <option value="R$">R$</option>
-          <option value="€">€</option>
-          <option value="$">$</option>
+          <option value="R$">R$ (Real)</option>
+          <option value="€">€ (Euro)</option>
+          <option value="$">$ (Dólar)</option>
         </select>
       </div>
       <div>
@@ -214,8 +241,7 @@
       </div>
     </div>
     <div class="tiny" style="margin-top:10px">
-      Se abrir um link que alguém te mandou, ele carrega o grupo automaticamente.
-      Em “Somente leitura”, o app não deixa editar — mas você pode Exportar e fazer uma cópia.
+      <b>Importante:</b> “Nome do grupo” é só o título do projeto. A <b>descrição da despesa</b> fica dentro da aba <b>Despesas</b>.
     </div>
   </div>
 
@@ -229,12 +255,14 @@
 
       <!-- DESPESAS -->
       <div id="tab-despesas">
+        <div class="req">✅ Campo obrigatório: <span style="font-weight:1100">Descrição da despesa</span></div>
+
         <div class="row">
-          <div>
-            <label>Descrição</label>
-            <input id="expDesc" placeholder="Ex.: Mercado, Uber, Jantar"/>
+          <div style="flex:1.2">
+            <label>Descrição da despesa *</label>
+            <input id="expDesc" placeholder="Ex.: Jantar, Mercado, Uber, Gasolina" autocomplete="off"/>
           </div>
-          <div style="flex:.6">
+          <div style="flex:.65">
             <label>Data</label>
             <input id="expDate" type="date"/>
           </div>
@@ -268,7 +296,7 @@
 
         <div class="row" style="margin-top:12px">
           <div style="flex:1"></div>
-          <div style="flex:.6;display:flex;gap:10px;justify-content:flex-end">
+          <div style="flex:.7;display:flex;gap:10px;justify-content:flex-end">
             <button class="btn ghost" id="btnClearExp" type="button">Limpar</button>
             <button class="btn good" id="btnSaveExp" type="button">Salvar</button>
           </div>
@@ -294,7 +322,7 @@
         <div class="row">
           <div>
             <label>Adicionar pessoa</label>
-            <input id="personName" placeholder="Ex.: Ernandes, Claumir, Áurea"/>
+            <input id="personName" placeholder="Ex.: Ernandes, Claumir, Áurea" autocomplete="off"/>
           </div>
           <div style="flex:.55">
             <button class="btn good" id="btnAddPerson" type="button">Adicionar</button>
@@ -328,13 +356,13 @@
       <h3 style="margin:0 0 8px 0;font-size:14px">Fluxo simples</h3>
       <div class="tiny">
         1) Vá em <b>Pessoas</b> e adicione todo mundo.<br/>
-        2) Registre despesas (quem pagou, valor, participantes).<br/>
+        2) Em <b>Despesas</b>, preencha <b>Descrição da despesa</b>, valor e participantes.<br/>
         3) Veja <b>Resumo</b> e use “Quem paga pra quem”.<br/>
         4) Clique em <b>Compartilhar link</b> e mande no grupo.
       </div>
       <div class="hr"></div>
       <div class="tiny">
-        Se quiser ultra-claro: use sempre <b>Igual</b>. Use <b>Pesos</b> só quando alguém consumiu mais/menos.
+        Dica: para ficar “de boa” e sem discussão, use <b>Igual</b>. Use <b>Pesos</b> só quando for necessário.
       </div>
     </div>
   </div>
@@ -344,42 +372,30 @@
 
 <script>
 (function(){
-  // -------- Helpers (sem structuredClone) --------
-  function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+  function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
   function $(id){ return document.getElementById(id); }
   function escapeHtml(s){
     return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#39;");
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#39;");
   }
-
-  const LS_KEY = "racha_app_clear_v1";
+  const LS_KEY = "racha_moss_v1";
   const toastEl = $("toast");
+
   function showToast(msg){
     toastEl.textContent = msg;
     toastEl.classList.add("show");
     setTimeout(()=>toastEl.classList.remove("show"), 1700);
   }
 
-  // -------- Money --------
+  function today(){ return new Date().toISOString().slice(0,10); }
+
   function toCents(v){
     const s = String(v ?? "").trim().replace(/\./g,"").replace(",",".");
     const n = Number(s);
-    if (!Number.isFinite(n)) return null;
+    if(!Number.isFinite(n)) return null;
     return Math.round(n * 100);
-  }
-  function money(cents){
-    const cur = state.currency;
-    const sign = cents < 0 ? "-" : "";
-    const abs = Math.abs(cents);
-    const whole = Math.floor(abs / 100);
-    const frac = String(abs % 100).padStart(2,"0");
-    const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return sign + cur + " " + wholeStr + "," + frac;
   }
   function centsToInput(cents){
     const abs = Math.abs(cents);
@@ -387,12 +403,20 @@
     const frac = String(abs%100).padStart(2,"0");
     return whole + "," + frac;
   }
+  function money(cents){
+    const cur = state.currency;
+    const sign = cents < 0 ? "-" : "";
+    const abs = Math.abs(cents);
+    const whole = Math.floor(abs/100);
+    const frac = String(abs%100).padStart(2,"0");
+    const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return sign + cur + " " + wholeStr + "," + frac;
+  }
 
-  // -------- State --------
   const state = {
     groupName: "Meu grupo",
     currency: "R$",
-    mode: "edit", // edit|view
+    mode: "edit",
     people: [],
     expenses: [],
     editingExpenseId: null
@@ -405,7 +429,6 @@
     try{ Object.assign(state, JSON.parse(raw)); return true; }catch{ return false; }
   }
 
-  // -------- Share via hash (base64) --------
   function encodeData(obj){
     const json = JSON.stringify(obj);
     return btoa(unescape(encodeURIComponent(json)));
@@ -431,10 +454,7 @@
       state.editingExpenseId = null;
       saveLocal();
       return true;
-    }catch(e){
-      console.warn(e);
-      return false;
-    }
+    }catch(e){ console.warn(e); return false; }
   }
   function makeShareLink(viewOnly){
     const payload = {
@@ -450,10 +470,8 @@
     return location.origin + location.pathname + "#" + params.toString();
   }
   async function copyToClipboard(text){
-    try{
-      await navigator.clipboard.writeText(text);
-      return true;
-    }catch{
+    try{ await navigator.clipboard.writeText(text); return true; }
+    catch{
       const ta = document.createElement("textarea");
       ta.value = text;
       document.body.appendChild(ta);
@@ -464,25 +482,19 @@
     }
   }
 
-  // -------- Tabs --------
   function setTab(name){
-    document.querySelectorAll(".tab").forEach(t=>{
-      t.classList.toggle("active", t.dataset.tab === name);
-    });
-    $("tab-despesas").classList.toggle("hide", name !== "despesas");
-    $("tab-pessoas").classList.toggle("hide", name !== "pessoas");
-    $("tab-resumo").classList.toggle("hide", name !== "resumo");
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+    $("tab-despesas").classList.toggle("hide", name!=="despesas");
+    $("tab-pessoas").classList.toggle("hide", name!=="pessoas");
+    $("tab-resumo").classList.toggle("hide", name!=="resumo");
   }
-  document.querySelectorAll(".tab").forEach(t=>{
-    t.addEventListener("click", ()=> setTab(t.dataset.tab));
-  });
+  document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>setTab(t.dataset.tab)));
 
-  // -------- Participants helpers --------
   function ensureExpenseParticipants(ex){
-    const map = new Map((ex.participants||[]).map(pp => [pp.personId, pp]));
+    const map = new Map((ex.participants||[]).map(pp=>[pp.personId, pp]));
     ex.participants = state.people.map(p=>{
       const prev = map.get(p.id);
-      return { personId: p.id, included: prev ? !!prev.included : true, weight: (prev && prev.weight!=null) ? prev.weight : 1 };
+      return { personId:p.id, included: prev ? !!prev.included : true, weight: (prev && prev.weight!=null) ? prev.weight : 1 };
     });
   }
 
@@ -501,112 +513,6 @@
   }
   function setDraftExpense(ex){ draftExpense = deepClone(ex); }
 
-  function fillExpenseForm(ex){
-    state.editingExpenseId = ex ? ex.id : null;
-
-    $("expDesc").value = ex ? (ex.desc || "") : "";
-    $("expDate").value = ex ? (ex.date || today()) : today();
-    $("splitType").value = ex ? (ex.splitType || "equal") : "equal";
-    $("expAmount").value = ex && ex.amountCents!=null ? centsToInput(ex.amountCents) : "";
-
-    renderPayerOptions();
-    $("expPayer").value = ex ? (ex.payerId || state.people[0]?.id || "") : (state.people[0]?.id || "");
-
-    draftExpense = deepClone(ex || {
-      id: uid(),
-      desc: "",
-      date: $("expDate").value,
-      payerId: $("expPayer").value,
-      amountCents: null,
-      splitType: $("splitType").value,
-      participants: []
-    });
-    ensureExpenseParticipants(draftExpense);
-    renderParticipants();
-  }
-
-  function today(){ return new Date().toISOString().slice(0,10); }
-
-  // -------- Render: People --------
-  function renderPeople(){
-    const box = $("peopleList");
-    const empty = $("emptyPeople");
-    box.innerHTML = "";
-
-    if(!state.people.length){
-      empty.style.display = "block";
-      return;
-    }
-    empty.style.display = "none";
-
-    state.people.forEach(p=>{
-      const item = document.createElement("div");
-      item.className = "card";
-      item.style.margin = "10px 0";
-      item.style.background = "rgba(255,255,255,.03)";
-      item.innerHTML = `
-        <div class="row">
-          <div style="flex:1.2">
-            <label>Nome</label>
-            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}"/>
-          </div>
-          <div style="flex:.55">
-            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
-          </div>
-        </div>
-      `;
-      box.appendChild(item);
-    });
-
-    box.querySelectorAll("[data-person-name]").forEach(inp=>{
-      inp.addEventListener("input", (e)=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = e.target.getAttribute("data-person-name");
-        const person = state.people.find(x=>x.id===id);
-        if(person){
-          person.name = e.target.value.trim() || "Sem nome";
-          saveLocal();
-          renderAll();
-        }
-      });
-    });
-
-    box.querySelectorAll("[data-del-person]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = btn.getAttribute("data-del-person");
-        state.people = state.people.filter(p=>p.id!==id);
-        state.expenses.forEach(ex=>{
-          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
-          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
-        });
-        saveLocal();
-        renderAll();
-        showToast("Pessoa removida.");
-      });
-    });
-  }
-
-  $("btnAddPerson").addEventListener("click", ()=>{
-    if(state.mode==="view"){ showToast("Somente leitura."); return; }
-    const name = $("personName").value.trim();
-    if(!name) return showToast("Digite um nome.");
-    const id = uid();
-    state.people.push({id, name});
-    $("personName").value = "";
-
-    // adiciona em despesas existentes
-    state.expenses.forEach(ex=>{
-      ex.participants = ex.participants || [];
-      ex.participants.push({personId:id, included:true, weight:1});
-    });
-
-    saveLocal();
-    renderAll();
-    showToast("Pessoa adicionada.");
-  });
-
-  // -------- Render: Payer + Participants --------
   function renderPayerOptions(){
     const sel = $("expPayer");
     sel.innerHTML = "";
@@ -654,19 +560,16 @@
 
     box.querySelectorAll("[data-inc]").forEach(ch=>{
       ch.addEventListener("change", ()=>{
-        let ex2 = getDraftExpense();
-        ensureExpenseParticipants(ex2);
+        let ex2 = getDraftExpense(); ensureExpenseParticipants(ex2);
         const pid = ch.getAttribute("data-inc");
         const pp = ex2.participants.find(x=>x.personId===pid);
         if(pp) pp.included = ch.checked;
         setDraftExpense(ex2);
       });
     });
-
     box.querySelectorAll("[data-w]").forEach(inp=>{
       inp.addEventListener("input", ()=>{
-        let ex2 = getDraftExpense();
-        ensureExpenseParticipants(ex2);
+        let ex2 = getDraftExpense(); ensureExpenseParticipants(ex2);
         const pid = inp.getAttribute("data-w");
         const pp = ex2.participants.find(x=>x.personId===pid);
         const n = Number(inp.value);
@@ -676,17 +579,88 @@
     });
   }
 
-  // -------- Expenses table --------
+  function fillExpenseForm(ex){
+    state.editingExpenseId = ex ? ex.id : null;
+
+    $("expDesc").value = ex ? (ex.desc || "") : "";
+    $("expDate").value = ex ? (ex.date || today()) : today();
+    $("splitType").value = ex ? (ex.splitType || "equal") : "equal";
+    $("expAmount").value = ex && ex.amountCents!=null ? centsToInput(ex.amountCents) : "";
+
+    renderPayerOptions();
+    $("expPayer").value = ex ? (ex.payerId || state.people[0]?.id || "") : (state.people[0]?.id || "");
+
+    draftExpense = deepClone(ex || {
+      id: uid(),
+      desc: "",
+      date: $("expDate").value,
+      payerId: $("expPayer").value,
+      amountCents: null,
+      splitType: $("splitType").value,
+      participants: []
+    });
+    ensureExpenseParticipants(draftExpense);
+    renderParticipants();
+  }
+
+  function renderPeople(){
+    const box = $("peopleList");
+    const empty = $("emptyPeople");
+    box.innerHTML = "";
+    if(!state.people.length){ empty.style.display="block"; return; }
+    empty.style.display="none";
+
+    state.people.forEach(p=>{
+      const item = document.createElement("div");
+      item.className = "card";
+      item.style.margin = "10px 0";
+      item.style.background = "rgba(255,255,255,.03)";
+      item.innerHTML = `
+        <div class="row">
+          <div style="flex:1.2">
+            <label>Nome</label>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
+          </div>
+          <div style="flex:.55">
+            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
+          </div>
+        </div>
+      `;
+      box.appendChild(item);
+    });
+
+    box.querySelectorAll("[data-person-name]").forEach(inp=>{
+      inp.addEventListener("input", (e)=>{
+        if(state.mode==="view"){ showToast("Somente leitura."); return; }
+        const id = e.target.getAttribute("data-person-name");
+        const person = state.people.find(x=>x.id===id);
+        if(person){
+          person.name = e.target.value.trim() || "Sem nome";
+          saveLocal(); renderAll();
+        }
+      });
+    });
+
+    box.querySelectorAll("[data-del-person]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(state.mode==="view"){ showToast("Somente leitura."); return; }
+        const id = btn.getAttribute("data-del-person");
+        state.people = state.people.filter(p=>p.id!==id);
+        state.expenses.forEach(ex=>{
+          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
+          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
+        });
+        saveLocal(); renderAll(); showToast("Pessoa removida.");
+      });
+    });
+  }
+
   function renderExpenses(){
     const tbody = $("expensesTbody");
     const empty = $("emptyExpenses");
     tbody.innerHTML = "";
-
-    if(!state.expenses.length){
-      empty.style.display = "block";
-      return;
-    }
-    empty.style.display = "none";
+    if(!state.expenses.length){ empty.style.display="block"; return; }
+    empty.style.display="none";
 
     const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
     const rows = deepClone(state.expenses).sort((a,b)=> (b.date||"").localeCompare(a.date||""));
@@ -694,7 +668,7 @@
     rows.forEach(ex=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td class="muted">${escapeHtml(ex.date || "—")}</td>
+        <td>${escapeHtml(ex.date || "—")}</td>
         <td>${escapeHtml(ex.desc || "—")}</td>
         <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
         <td><span class="badge">${money(ex.amountCents || 0)}</span></td>
@@ -724,77 +698,11 @@
         if(state.mode==="view"){ showToast("Somente leitura."); return; }
         const id = b.getAttribute("data-del");
         state.expenses = state.expenses.filter(x=>x.id!==id);
-        if(state.editingExpenseId===id){
-          state.editingExpenseId = null;
-          draftExpense = null;
-          fillExpenseForm(null);
-        }
-        saveLocal();
-        renderAll();
-        showToast("Despesa removida.");
+        saveLocal(); renderAll(); showToast("Despesa removida.");
       });
     });
   }
 
-  function validateExpense(ex){
-    if(!state.people.length) return "Adicione pessoas primeiro.";
-    if(!ex.desc) return "Coloque uma descrição.";
-    if(!ex.date) return "Escolha a data.";
-    if(!ex.payerId) return "Selecione quem pagou.";
-    if(ex.amountCents==null || ex.amountCents<=0) return "Valor inválido.";
-
-    const included = (ex.participants||[]).filter(p=>p.included);
-    if(!included.length) return "Selecione pelo menos 1 participante.";
-
-    if(ex.splitType==="weights"){
-      const sumW = included.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-      if(sumW<=0) return "Em pesos, a soma dos pesos precisa ser > 0.";
-    }
-    return null;
-  }
-
-  $("splitType").addEventListener("change", ()=>{
-    let ex = getDraftExpense();
-    ex.splitType = $("splitType").value;
-    ensureExpenseParticipants(ex);
-    setDraftExpense(ex);
-    renderParticipants();
-  });
-  ["expDesc","expDate","expPayer","expAmount"].forEach(id=>{
-    $(id).addEventListener("input", ()=>{
-      let ex = getDraftExpense();
-      ensureExpenseParticipants(ex);
-      setDraftExpense(ex);
-    });
-  });
-
-  $("btnClearExp").addEventListener("click", ()=>{
-    state.editingExpenseId = null;
-    draftExpense = null;
-    fillExpenseForm(null);
-    showToast("Limpo.");
-  });
-
-  $("btnSaveExp").addEventListener("click", ()=>{
-    if(state.mode==="view"){ showToast("Somente leitura."); return; }
-    let ex = getDraftExpense();
-    ensureExpenseParticipants(ex);
-    const err = validateExpense(ex);
-    if(err) return showToast(err);
-
-    const idx = state.expenses.findIndex(x=>x.id===ex.id);
-    if(idx>=0) state.expenses[idx] = ex;
-    else state.expenses.push(ex);
-
-    state.editingExpenseId = null;
-    draftExpense = null;
-    saveLocal();
-    fillExpenseForm(null);
-    renderAll();
-    showToast("Salvo.");
-  });
-
-  // -------- Finance calc --------
   function computeBalances(){
     const bal = new Map(state.people.map(p=>[p.id, 0]));
 
@@ -809,19 +717,13 @@
         const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
         if(totalW<=0) return;
 
-        // floor + distribuir resto para evitar centavos perdidos
         const shares = parts.map(p=>{
           const w = Number(p.weight)||0;
           return Math.floor(amount * (w/totalW));
         });
         let base = shares.reduce((a,b)=>a+b,0);
         let rem = amount - base;
-
-        // distribui o resto 1 centavo por vez
-        for(let i=0; i<parts.length && rem>0; i++){
-          shares[i] += 1;
-          rem -= 1;
-        }
+        for(let i=0;i<parts.length && rem>0;i++){ shares[i]+=1; rem-=1; }
 
         parts.forEach((p,i)=>{
           bal.set(p.personId, (bal.get(p.personId)||0) - shares[i]);
@@ -831,7 +733,7 @@
         const n = parts.length;
         const share = Math.floor(amount / n);
         let rem = amount - (share*n);
-        parts.forEach((p,i)=>{
+        parts.forEach(p=>{
           const extra = rem>0 ? 1 : 0;
           if(rem>0) rem--;
           bal.set(p.personId, (bal.get(p.personId)||0) - (share + extra));
@@ -843,24 +745,19 @@
   }
 
   function computeSettlement(bal){
-    const creditors = [];
-    const debtors = [];
-    for(const [pid, cents] of bal.entries()){
-      if(cents>0) creditors.push([pid, cents]);
-      else if(cents<0) debtors.push([pid, -cents]);
+    const creditors=[], debtors=[];
+    for(const [pid,cents] of bal.entries()){
+      if(cents>0) creditors.push([pid,cents]);
+      else if(cents<0) debtors.push([pid,-cents]);
     }
     creditors.sort((a,b)=>b[1]-a[1]);
     debtors.sort((a,b)=>b[1]-a[1]);
-
-    const transfers = [];
-    let i=0, j=0;
+    const transfers=[];
+    let i=0,j=0;
     while(i<debtors.length && j<creditors.length){
-      const dId = debtors[i][0], dAmt = debtors[i][1];
-      const cId = creditors[j][0], cAmt = creditors[j][1];
-      const x = Math.min(dAmt, cAmt);
-      transfers.push({from:dId, to:cId, amount:x});
-      debtors[i][1] -= x;
-      creditors[j][1] -= x;
+      const x = Math.min(debtors[i][1], creditors[j][1]);
+      transfers.push({from:debtors[i][0], to:creditors[j][0], amount:x});
+      debtors[i][1]-=x; creditors[j][1]-=x;
       if(debtors[i][1]===0) i++;
       if(creditors[j][1]===0) j++;
     }
@@ -876,10 +773,7 @@
     const bal = computeBalances();
     const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
 
-    // balances table
-    const items = state.people.map(p=>{
-      return {name:p.name, v:(bal.get(p.id)||0)};
-    }).sort((a,b)=>b.v-a.v);
+    const items = state.people.map(p=>({name:p.name, v:(bal.get(p.id)||0)})).sort((a,b)=>b.v-a.v);
 
     const balancesDiv = $("balances");
     balancesDiv.innerHTML = "";
@@ -897,7 +791,7 @@
               <tr>
                 <td>${escapeHtml(it.name)}</td>
                 <td><span class="badge ${cls}">${money(it.v)}</span></td>
-                <td class="muted">${interp}</td>
+                <td style="color:var(--muted)">${interp}</td>
               </tr>`;
           }).join("")}
         </tbody>`;
@@ -926,32 +820,44 @@
     }
   }
 
-  // -------- Lock edit mode (somente o necessário) --------
   function applyModeLock(){
     const lock = state.mode === "view";
-
-    // bloquear somente ações de edição
     $("btnAddPerson").disabled = lock;
     $("btnSaveExp").disabled = lock;
     $("btnClearExp").disabled = lock;
 
-    // inputs de edição
     ["personName","expDesc","expDate","expPayer","expAmount","splitType","groupName","currency"].forEach(id=>{
       $(id).disabled = lock;
     });
 
-    // botões da tabela e inputs de nomes
     document.querySelectorAll("[data-del-person],[data-person-name],[data-edit],[data-del],[data-inc],[data-w]").forEach(el=>{
       el.disabled = lock;
     });
   }
 
-  // -------- Buttons top --------
+  function validateExpense(ex){
+    if(!state.people.length) return "Adicione pessoas primeiro (aba Pessoas).";
+    if(!ex.desc){ return "Preencha a DESCRIÇÃO DA DESPESA."; }
+    if(!ex.date) return "Escolha a data.";
+    if(!ex.payerId) return "Selecione quem pagou.";
+    if(ex.amountCents==null || ex.amountCents<=0) return "Valor inválido.";
+
+    const included = (ex.participants||[]).filter(p=>p.included);
+    if(!included.length) return "Selecione pelo menos 1 participante.";
+
+    if(ex.splitType==="weights"){
+      const sumW = included.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+      if(sumW<=0) return "Em pesos, a soma dos pesos precisa ser > 0.";
+    }
+    return null;
+  }
+
+  // Events
   $("btnShare").addEventListener("click", async ()=>{
-    const link = makeShareLink(true); // sempre view no link
+    const link = makeShareLink(true);
     const ok = await copyToClipboard(link);
     if(ok) showToast("Link copiado!");
-    else { showToast("Não copiou — copie manualmente."); prompt("Copie o link:", link); }
+    else { showToast("Copie manualmente."); prompt("Copie o link:", link); }
   });
 
   $("btnExport").addEventListener("click", ()=>{
@@ -1010,8 +916,7 @@
 
   $("mode").addEventListener("change", ()=>{
     state.mode = $("mode").value;
-    saveLocal();
-    renderAll();
+    saveLocal(); renderAll();
     showToast(state.mode==="view" ? "Somente leitura." : "Editável.");
   });
 
@@ -1021,43 +926,103 @@
   });
   $("currency").addEventListener("change", ()=>{
     state.currency = $("currency").value;
-    saveLocal();
-    renderAll();
+    saveLocal(); renderAll();
   });
 
-  // -------- Render all --------
+  $("splitType").addEventListener("change", ()=>{
+    let ex = getDraftExpense();
+    ex.splitType = $("splitType").value;
+    ensureExpenseParticipants(ex);
+    setDraftExpense(ex);
+    renderParticipants();
+  });
+
+  ["expDesc","expDate","expPayer","expAmount"].forEach(id=>{
+    $(id).addEventListener("input", ()=>{
+      let ex = getDraftExpense();
+      ensureExpenseParticipants(ex);
+      setDraftExpense(ex);
+    });
+  });
+
+  $("btnClearExp").addEventListener("click", ()=>{
+    state.editingExpenseId = null;
+    draftExpense = null;
+    fillExpenseForm(null);
+    showToast("Limpo.");
+  });
+
+  $("btnSaveExp").addEventListener("click", ()=>{
+    if(state.mode==="view"){ showToast("Somente leitura."); return; }
+
+    // força leitura do DOM agora (evita qualquer bug de rascunho)
+    let ex = getDraftExpense();
+    ensureExpenseParticipants(ex);
+
+    const err = validateExpense(ex);
+    if(err){
+      showToast(err);
+      if(!ex.desc){ $("expDesc").focus(); }
+      return;
+    }
+
+    const idx = state.expenses.findIndex(x=>x.id===ex.id);
+    if(idx>=0) state.expenses[idx] = ex;
+    else state.expenses.push(ex);
+
+    state.editingExpenseId = null;
+    draftExpense = null;
+    saveLocal();
+    fillExpenseForm(null);
+    renderAll();
+    showToast("Despesa salva.");
+  });
+
+  $("btnAddPerson").addEventListener("click", ()=>{
+    if(state.mode==="view"){ showToast("Somente leitura."); return; }
+    const name = $("personName").value.trim();
+    if(!name) return showToast("Digite um nome.");
+    const id = uid();
+    state.people.push({id, name});
+    $("personName").value = "";
+
+    state.expenses.forEach(ex=>{
+      ex.participants = ex.participants || [];
+      ex.participants.push({personId:id, included:true, weight:1});
+    });
+
+    saveLocal(); renderAll();
+    showToast("Pessoa adicionada.");
+  });
+
   function renderAll(){
     $("groupName").value = state.groupName || "Meu grupo";
     $("currency").value = state.currency || "R$";
     $("mode").value = state.mode || "edit";
 
-    renderPeople();
-    renderPayerOptions();
     if(!$("expDate").value) $("expDate").value = today();
 
+    renderPeople();
+    renderPayerOptions();
     renderParticipants();
     renderExpenses();
     renderSummary();
     applyModeLock();
   }
 
-  // -------- Init --------
+  // Init
   loadLocal();
   loadFromHashIfAny();
 
-  // Se vazio, cria um exemplo mínimo
+  // demo mínimo se vazio
   if(!state.people.length && !state.expenses.length){
     state.groupName = "Exemplo (edite ou resete)";
     state.currency = "R$";
     state.people = [
       {id: uid(), name:"Ernandes"},
       {id: uid(), name:"Claumir"},
-      {id: uid(), name:"Áurea"}
-    ];
-    const a = state.people[0].id, b = state.people[1].id, c = state.people[2].id;
-    state.expenses = [
-      { id: uid(), desc:"Airbnb", date:today(), payerId:a, amountCents:119926, splitType:"equal",
-        participants:[{personId:a,included:true,weight:1},{personId:b,included:true,weight:1},{personId:c,included:true,weight:1}] }
+      {id: uid(), name:"Áurea"},
+      {id: uid(), name:"Ana Paula"},
     ];
     saveLocal();
   }
