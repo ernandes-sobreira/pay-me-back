@@ -1,1 +1,586 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Racha — Divisão de Contas</title>
+  <meta name="theme-color" content="#0b1220"/>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#101a33;
+      --card2:#0f1730;
+      --text:#e9efff;
+      --muted:#9fb0d0;
+      --line:rgba(255,255,255,.10);
+      --shadow:0 12px 30px rgba(0,0,0,.35);
+      --r:18px;
 
+      --a:#22c55e;  /* verde */
+      --b:#60a5fa;  /* azul */
+      --c:#f97316;  /* laranja */
+      --d:#ef4444;  /* vermelho */
+      --p:#a78bfa;  /* roxo */
+      --y:#fbbf24;  /* amarelo */
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1000px 700px at 15% -10%, rgba(96,165,250,.25), transparent 55%),
+        radial-gradient(900px 650px at 95% 0%, rgba(167,139,250,.22), transparent 55%),
+        radial-gradient(900px 700px at 40% 110%, rgba(34,197,94,.18), transparent 55%),
+        var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
+    header{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      position:sticky; top:0; padding:14px 0 10px; backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,18,32,.85), rgba(11,18,32,.45));
+      z-index:20;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background: conic-gradient(from 210deg, var(--b), var(--p), var(--a), var(--c), var(--b));
+      box-shadow: 0 10px 26px rgba(0,0,0,.45);
+    }
+    h1{font-size:16px;margin:0}
+    .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+    .grid{display:grid;grid-template-columns: 1.1fr .9fr; gap:14px; margin-top:12px}
+    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{font-size:14px;margin:0 0 10px 0}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .row > *{flex:1}
+    label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px 2px}
+    input, select, textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background: rgba(15,23,48,.7);
+      color:var(--text);
+      border-radius: 12px;
+      padding:11px 12px;
+      outline:none;
+    }
+    textarea{min-height:44px;resize:vertical}
+    input[type="date"]{padding:10px 12px}
+    .btn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius: 12px;
+      padding:11px 12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.15s transform, .15s opacity;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn:active{transform: translateY(0)}
+    .btn.primary{background: linear-gradient(135deg, rgba(96,165,250,.30), rgba(167,139,250,.22)); border-color: rgba(96,165,250,.35)}
+    .btn.good{background: linear-gradient(135deg, rgba(34,197,94,.28), rgba(96,165,250,.12)); border-color: rgba(34,197,94,.35)}
+    .btn.warn{background: linear-gradient(135deg, rgba(249,115,22,.28), rgba(251,191,36,.14)); border-color: rgba(249,115,22,.35)}
+    .btn.bad{background: linear-gradient(135deg, rgba(239,68,68,.26), rgba(167,139,250,.10)); border-color: rgba(239,68,68,.40)}
+    .btn.ghost{background: transparent}
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .tiny{font-size:12px;color:var(--muted);line-height:1.35}
+    .muted{color:var(--muted)}
+    .right{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
+    th{color:var(--muted);font-size:12px;font-weight:700}
+    .t-actions{display:flex; gap:8px; justify-content:flex-end}
+    .mini{
+      padding:7px 10px;border-radius:10px;font-size:12px;font-weight:800;
+      background: rgba(255,255,255,.06); border:1px solid var(--line); cursor:pointer;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center;
+      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:800;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+    }
+    .pos{color:#a7f3d0;border-color: rgba(34,197,94,.35)}
+    .neg{color:#fecaca;border-color: rgba(239,68,68,.35)}
+    .zero{color:var(--muted)}
+    .kpi{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+    }
+    @media (max-width:560px){ .kpi{grid-template-columns:1fr} }
+    .kpi .box{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding:12px;
+      background: rgba(255,255,255,.04);
+    }
+    .kpi .v{font-size:18px;font-weight:900}
+    .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .members{
+      display:flex; flex-wrap:wrap; gap:10px;
+      border:1px solid var(--line);
+      background: rgba(15,23,48,.55);
+      border-radius: 14px;
+      padding:10px;
+    }
+    .member{
+      display:flex; align-items:center; gap:8px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      padding:8px 10px;
+      font-size:12px;
+    }
+    .member input{width:16px;height:16px}
+    .member .w{
+      width:56px;
+      padding:6px 8px;
+      border-radius:10px;
+      font-weight:800;
+    }
+
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tab{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;font-weight:800;font-size:12px}
+    .tab.active{border-color:rgba(96,165,250,.45); background: rgba(96,165,250,.18)}
+    .hide{display:none}
+
+    .toast{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:16px; z-index:50;
+      background: rgba(15,23,48,.95);
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:10px 12px; border-radius: 12px;
+      box-shadow: var(--shadow);
+      font-size:13px;
+      opacity:0; pointer-events:none; transition:.2s opacity, .2s transform;
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Racha — Divisão de Contas</h1>
+        <div class="sub">Grupo compartilhável • cálculos claros • offline • um arquivo só</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn primary" id="btnShare">Compartilhar link</button>
+      <button class="btn" id="btnExport">Exportar JSON</button>
+      <button class="btn" id="btnImport">Importar JSON</button>
+      <button class="btn bad" id="btnReset">Resetar</button>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="row" style="align-items:flex-end">
+      <div style="flex:1.2">
+        <label>Nome do grupo</label>
+        <input id="groupName" placeholder="Ex.: Viagem Holanda • Casa Airbnb • Churrasco"/>
+      </div>
+      <div>
+        <label>Moeda</label>
+        <select id="currency">
+          <option value="R$">R$</option>
+          <option value="€">€</option>
+          <option value="$">$</option>
+        </select>
+      </div>
+      <div>
+        <label>Modo</label>
+        <select id="mode">
+          <option value="edit">Editável (admin/local)</option>
+          <option value="view">Somente leitura (para compartilhar)</option>
+        </select>
+      </div>
+    </div>
+    <div class="tiny" style="margin-top:10px">
+      Dica: ao compartilhar, você pode mandar em <b>Somente leitura</b> para evitar bagunça.
+      Mesmo em “Somente leitura”, a pessoa ainda pode <b>Exportar</b> e fazer cópia local.
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="tabs" style="margin-bottom:10px">
+        <div class="tab active" data-tab="despesas">Despesas</div>
+        <div class="tab" data-tab="pessoas">Pessoas</div>
+        <div class="tab" data-tab="resumo">Resumo</div>
+      </div>
+
+      <!-- DESPESAS -->
+      <div id="tab-despesas">
+        <h2>Adicionar / editar despesa</h2>
+
+        <div class="row">
+          <div>
+            <label>Descrição</label>
+            <input id="expDesc" placeholder="Ex.: Mercado, Uber, Jantar, Gasolina"/>
+          </div>
+          <div style="flex:.6">
+            <label>Data</label>
+            <input id="expDate" type="date"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:.8">
+            <label>Quem pagou</label>
+            <select id="expPayer"></select>
+          </div>
+          <div style="flex:.55">
+            <label>Valor</label>
+            <input id="expAmount" inputmode="decimal" placeholder="Ex.: 125,90"/>
+          </div>
+          <div style="flex:.7">
+            <label>Divisão</label>
+            <select id="splitType">
+              <option value="equal">Igual (entre selecionados)</option>
+              <option value="weights">Por pesos (cotas)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label>Quem participa desta despesa</label>
+          <div class="members" id="participants"></div>
+          <div class="tiny" style="margin-top:8px">
+            Em “por pesos”, defina quantas cotas cada pessoa tem (ex.: alguém que consumiu mais = peso 2).
+          </div>
+        </div>
+
+        <div class="right" style="margin-top:12px">
+          <button class="btn ghost" id="btnClearExp">Limpar</button>
+          <button class="btn good" id="btnSaveExp">Salvar despesa</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Lista de despesas</h2>
+        <div class="tiny" id="emptyExpenses" style="margin:6px 0 10px">Nenhuma despesa ainda.</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Pagou</th>
+                <th>Valor</th>
+                <th style="text-align:right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="expensesTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PESSOAS -->
+      <div id="tab-pessoas" class="hide">
+        <h2>Pessoas do grupo</h2>
+        <div class="row" style="align-items:flex-end">
+          <div>
+            <label>Nome</label>
+            <input id="personName" placeholder="Ex.: Ernandes, Claumir, Áurea"/>
+          </div>
+          <div style="flex:.55">
+            <button class="btn good" id="btnAddPerson">Adicionar pessoa</button>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div class="tiny" id="emptyPeople">Nenhuma pessoa cadastrada.</div>
+        <div id="peopleList"></div>
+      </div>
+
+      <!-- RESUMO -->
+      <div id="tab-resumo" class="hide">
+        <h2>Resumo e liquidação</h2>
+        <div class="kpi">
+          <div class="box">
+            <div class="v" id="kpiTotal">—</div>
+            <div class="l">Total gasto</div>
+          </div>
+          <div class="box">
+            <div class="v" id="kpiN">—</div>
+            <div class="l">Nº de pessoas</div>
+          </div>
+          <div class="box">
+            <div class="v" id="kpiE">—</div>
+            <div class="l">Nº de despesas</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <h2>Saldos</h2>
+        <div id="balances"></div>
+
+        <div class="hr"></div>
+        <h2>Quem paga pra quem (sugestão mínima)</h2>
+        <div class="tiny" style="margin:6px 0 10px">
+          O algoritmo tenta reduzir o número de transferências, liquida os saldos e deixa tudo “zerado”.
+        </div>
+        <div id="settlement"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Como usar (bem simples)</h2>
+      <div class="tiny">
+        <ol style="margin:0; padding-left:18px; line-height:1.5">
+          <li>Vá em <b>Pessoas</b> e adicione todo mundo.</li>
+          <li>Em <b>Despesas</b>, registre cada gasto (quem pagou, valor e participantes).</li>
+          <li>Abra <b>Resumo</b> para ver <b>saldo</b> e <b>quem transfere pra quem</b>.</li>
+          <li>Clique em <b>Compartilhar link</b> e mande no grupo.</li>
+        </ol>
+      </div>
+
+      <div class="hr"></div>
+
+      <h2>Boas práticas (pra evitar treta)</h2>
+      <div class="tiny">
+        <ul style="margin:0; padding-left:18px; line-height:1.5">
+          <li>Registre as despesas <b>no momento</b>.</li>
+          <li>Use “por pesos” quando só parte do grupo consumiu mais (ex.: bebida, passeio).</li>
+          <li>Finalize usando “Quem paga pra quem” e pronto.</li>
+        </ul>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="pill">🔒 Sem servidor • tudo no seu celular</div>
+      <div class="pill">🔗 Link compartilhável com os dados</div>
+      <div class="pill">🧾 Exporta/Importa JSON</div>
+
+      <div class="hr"></div>
+      <div class="tiny muted">
+        Observação: por ser um app 100% local, o “link” carrega os dados no próprio endereço.
+        Se quiser multiusuário com edição simultânea, aí precisa servidor (posso te entregar uma versão com Google Sheets/Firestore depois).
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // -----------------------------
+  // Estado + Persistência
+  // -----------------------------
+  const LS_KEY = "racha_app_v1";
+  const $ = (id) => document.getElementById(id);
+  const toastEl = $("toast");
+
+  const state = {
+    groupName: "Meu grupo",
+    currency: "R$",
+    mode: "edit", // edit | view
+    people: [],   // {id, name}
+    expenses: [], // {id, desc, date, payerId, amountCents, splitType, participants: [{personId, included, weight}]}
+    editingExpenseId: null
+  };
+
+  function uid() {
+    return Math.random().toString(16).slice(2) + Date.now().toString(16);
+  }
+  function toCents(v) {
+    // aceita "1.234,56" ou "1234.56"
+    const s = String(v ?? "").trim().replace(/\./g,"").replace(",",".");
+    const n = Number(s);
+    if (!Number.isFinite(n)) return null;
+    return Math.round(n * 100);
+  }
+  function money(cents) {
+    const cur = state.currency;
+    const sign = cents < 0 ? "-" : "";
+    const abs = Math.abs(cents);
+    const whole = Math.floor(abs / 100);
+    const frac = String(abs % 100).padStart(2,"0");
+    // separador simples pt-br
+    const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `${sign}${cur} ${wholeStr},${frac}`;
+  }
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    setTimeout(()=>toastEl.classList.remove("show"), 1800);
+  }
+
+  function saveLocal() {
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+  }
+  function loadLocal() {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    try {
+      const obj = JSON.parse(raw);
+      Object.assign(state, obj);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // -----------------------------
+  // Compartilhamento via hash
+  // -----------------------------
+  function encodeData(obj){
+    const json = JSON.stringify(obj);
+    // btoa precisa latin1; usamos escape/unescape para compat
+    return btoa(unescape(encodeURIComponent(json)));
+  }
+  function decodeData(b64){
+    const json = decodeURIComponent(escape(atob(b64)));
+    return JSON.parse(json);
+  }
+
+  function loadFromHashIfAny(){
+    const h = location.hash?.slice(1);
+    if (!h) return false;
+
+    // formato: data=<b64>&mode=view
+    const params = new URLSearchParams(h);
+    const data = params.get("data");
+    const mode = params.get("mode");
+
+    if (!data) return false;
+    try{
+      const obj = decodeData(data);
+      // aplica somente campos esperados (evita lixo)
+      state.groupName = obj.groupName ?? state.groupName;
+      state.currency  = obj.currency  ?? state.currency;
+      state.people    = Array.isArray(obj.people) ? obj.people : [];
+      state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
+      state.mode      = (mode === "view") ? "view" : (obj.mode ?? "edit");
+      state.editingExpenseId = null;
+      saveLocal();
+      return true;
+    }catch(e){
+      console.warn("Hash inválido", e);
+      return false;
+    }
+  }
+
+  function makeShareLink(viewOnly=true){
+    const payload = {
+      groupName: state.groupName,
+      currency: state.currency,
+      people: state.people,
+      expenses: state.expenses,
+      mode: state.mode
+    };
+    const data = encodeData(payload);
+    const params = new URLSearchParams();
+    params.set("data", data);
+    params.set("mode", viewOnly ? "view" : "edit"); // por segurança, default view
+    return `${location.origin}${location.pathname}#${params.toString()}`;
+  }
+
+  async function copyToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch{
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      ta.remove();
+      return ok;
+    }
+  }
+
+  // -----------------------------
+  // UI: Tabs
+  // -----------------------------
+  function setTab(name){
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+    $("tab-despesas").classList.toggle("hide", name!=="despesas");
+    $("tab-pessoas").classList.toggle("hide", name!=="pessoas");
+    $("tab-resumo").classList.toggle("hide", name!=="resumo");
+  }
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.addEventListener("click", ()=> setTab(t.dataset.tab));
+  });
+
+  // -----------------------------
+  // Pessoas
+  // -----------------------------
+  function renderPeople(){
+    const box = $("peopleList");
+    const empty = $("emptyPeople");
+    box.innerHTML = "";
+
+    if (!state.people.length){
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    state.people.forEach(p=>{
+      const row = document.createElement("div");
+      row.className = "card";
+      row.style.margin = "10px 0";
+      row.style.background = "rgba(255,255,255,.03)";
+      row.innerHTML = `
+        <div class="row" style="align-items:center">
+          <div style="flex:1.2">
+            <label>Nome</label>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}"/>
+          </div>
+          <div style="flex:.55">
+            <label>&nbsp;</label>
+            <button class="btn bad" data-del-person="${p.id}">Excluir</button>
+          </div>
+        </div>
+        <div class="tiny muted" style="margin-top:8px">Dica: ao mudar um nome, as despesas já refletem automaticamente.</div>
+      `;
+      box.appendChild(row);
+    });
+
+    box.querySelectorAll("[data-person-name]").forEach(inp=>{
+      inp.addEventListener("input", (e)=>{
+        const id = e.target.getAttribute("data-person-name");
+        const person = state.people.find(x=>x.id===id);
+        if (person){
+          person.name = e.target.value.trim() || "Sem nome";
+          saveLocal();
+          renderAll();
+        }
+      });
+    });
+
+    box.querySelectorAll("[data-del-person]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if (state.mode==="vi
