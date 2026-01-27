@@ -3,30 +3,22 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Racha — Divisão de Contas (Moss)</title>
+  <title>Racha — Divisão de Contas (Moss v2)</title>
   <meta name="theme-color" content="#0b1410"/>
   <style>
     :root{
-      /* Base (moss / money) */
       --bg:#0b1410;
       --card:#0f1d16;
-      --card2:#12251b;
       --text:#eef7f0;
       --muted:#b8cbbb;
-
-      /* Contrast lines/shadow */
       --line:rgba(255,255,255,.12);
       --shadow:0 12px 30px rgba(0,0,0,.40);
       --r:16px;
 
-      /* Accents */
       --moss:#4b7a4b;
-      --moss2:#2f5f3f;
-      --gold:#d4b46a;   /* “dinheiro” */
+      --gold:#d4b46a;
       --red:#ef4444;
-      --blue:#4ea3ff;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -34,13 +26,10 @@
       background:
         radial-gradient(900px 650px at 12% -10%, rgba(75,122,75,.22), transparent 55%),
         radial-gradient(900px 650px at 95% 0%, rgba(212,180,106,.16), transparent 55%),
-        radial-gradient(900px 700px at 45% 110%, rgba(46,163,255,.10), transparent 55%),
         var(--bg);
       color:var(--text);
     }
-
     .wrap{max-width:1100px;margin:0 auto;padding:16px 14px 40px}
-
     header{
       display:flex; gap:12px; align-items:center; justify-content:space-between;
       position:sticky; top:0; z-index:20;
@@ -51,11 +40,12 @@
     .brand{display:flex;gap:12px;align-items:center}
     .logo{
       width:40px;height:40px;border-radius:14px;
-      background: conic-gradient(from 210deg, var(--moss), var(--gold), var(--moss2), var(--blue), var(--moss));
+      background: conic-gradient(from 210deg, var(--moss), var(--gold), var(--moss), var(--gold), var(--moss));
       box-shadow: 0 10px 26px rgba(0,0,0,.45);
     }
     h1{font-size:16px;margin:0}
     .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
@@ -83,8 +73,6 @@
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
     .row > *{flex:1}
 
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-
     .btn{
       border:1px solid var(--line);
       background: rgba(255,255,255,.06);
@@ -97,15 +85,13 @@
       user-select:none;
       white-space:nowrap;
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn:active{transform:translateY(0)}
     .btn.primary{
       background: linear-gradient(135deg, rgba(75,122,75,.34), rgba(212,180,106,.20));
       border-color: rgba(212,180,106,.35);
     }
     .btn.good{
-      background: linear-gradient(135deg, rgba(47,95,63,.40), rgba(75,122,75,.18));
-      border-color: rgba(75,122,75,.40);
+      background: linear-gradient(135deg, rgba(75,122,75,.42), rgba(212,180,106,.10));
+      border-color: rgba(75,122,75,.55);
     }
     .btn.bad{
       background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(212,180,106,.08));
@@ -140,12 +126,7 @@
       font-size:12px;
     }
     .member input[type="checkbox"]{width:16px;height:16px}
-    .member .w{
-      width:62px;
-      padding:6px 8px;
-      border-radius:10px;
-      font-weight:1000;
-    }
+    .member .w{width:62px;padding:6px 8px;border-radius:10px;font-weight:1000}
 
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
@@ -163,27 +144,22 @@
       background: rgba(212,180,106,.10);
       color: var(--text);
     }
-    .pos{color:#b7f3c9;border-color: rgba(75,122,75,.55)}
-    .neg{color:#fecaca;border-color: rgba(239,68,68,.45)}
-    .zero{color:var(--muted);border-color: rgba(255,255,255,.14)}
 
-    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    @media (max-width:560px){.kpi{grid-template-columns:1fr}}
-    .kpi .box{
-      border:1px solid var(--line);
-      border-radius: 14px;
-      padding:12px;
-      background: rgba(255,255,255,.04);
+    /* Aviso fixo perto do salvar */
+    .alert{
+      border:1px solid rgba(239,68,68,.45);
+      background: rgba(239,68,68,.10);
+      color: #ffd6d6;
+      border-radius: 12px;
+      padding:10px 12px;
+      font-size:12px;
+      font-weight:900;
+      display:none;
+      margin-top:10px;
     }
-    .kpi .v{font-size:18px;font-weight:1100}
-    .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
-
-    .req{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid rgba(212,180,106,.35);
-      background: rgba(212,180,106,.10);
-      padding:8px 10px;border-radius:12px;margin-bottom:10px;
-      font-size:12px;color:var(--text);font-weight:900;
+    .invalid{
+      border-color: rgba(239,68,68,.65) !important;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.18);
     }
 
     .toast{
@@ -221,8 +197,8 @@
   <div class="card">
     <div class="row">
       <div style="flex:1.2">
-        <label>Nome do grupo (ex.: “Viagem Holanda”, “Airbnb”, “Churrasco”)</label>
-        <input id="groupName" placeholder="Ex.: Viagem • Airbnb • Jantar da turma" autocomplete="off"/>
+        <label>Nome do grupo</label>
+        <input id="groupName" placeholder="Ex.: Viagem • Airbnb • Churrasco" autocomplete="off"/>
       </div>
       <div>
         <label>Moeda</label>
@@ -240,9 +216,6 @@
         </select>
       </div>
     </div>
-    <div class="tiny" style="margin-top:10px">
-      <b>Importante:</b> “Nome do grupo” é só o título do projeto. A <b>descrição da despesa</b> fica dentro da aba <b>Despesas</b>.
-    </div>
   </div>
 
   <div class="grid">
@@ -255,14 +228,14 @@
 
       <!-- DESPESAS -->
       <div id="tab-despesas">
-        <div class="req">✅ Campo obrigatório: <span style="font-weight:1100">Descrição da despesa</span></div>
 
+        <!-- DEIXEI A DESCRIÇÃO AQUI (PERTO DO SALVAR) -->
         <div class="row">
           <div style="flex:1.2">
             <label>Descrição da despesa *</label>
-            <input id="expDesc" placeholder="Ex.: Jantar, Mercado, Uber, Gasolina" autocomplete="off"/>
+            <input id="expDesc" placeholder="Ex.: Jantar, Mercado, Uber" autocomplete="off"/>
           </div>
-          <div style="flex:.65">
+          <div style="flex:.7">
             <label>Data</label>
             <input id="expDate" type="date"/>
           </div>
@@ -275,7 +248,7 @@
           </div>
           <div style="flex:.6">
             <label>Valor</label>
-            <input id="expAmount" inputmode="decimal" placeholder="Ex.: 125,90"/>
+            <input id="expAmount" inputmode="decimal" placeholder="Ex.: 125,00"/>
           </div>
           <div style="flex:.8">
             <label>Divisão</label>
@@ -294,9 +267,11 @@
           </div>
         </div>
 
+        <div id="alert" class="alert"></div>
+
         <div class="row" style="margin-top:12px">
           <div style="flex:1"></div>
-          <div style="flex:.7;display:flex;gap:10px;justify-content:flex-end">
+          <div style="flex:.8;display:flex;gap:10px;justify-content:flex-end">
             <button class="btn ghost" id="btnClearExp" type="button">Limpar</button>
             <button class="btn good" id="btnSaveExp" type="button">Salvar</button>
           </div>
@@ -335,34 +310,13 @@
 
       <!-- RESUMO -->
       <div id="tab-resumo" class="hide">
-        <div class="kpi">
-          <div class="box"><div class="v" id="kpiTotal">—</div><div class="l">Total</div></div>
-          <div class="box"><div class="v" id="kpiN">—</div><div class="l">Pessoas</div></div>
-          <div class="box"><div class="v" id="kpiE">—</div><div class="l">Despesas</div></div>
-        </div>
-
-        <div class="hr"></div>
-        <h3 style="margin:0 0 8px 0;font-size:14px">Saldos</h3>
-        <div id="balances"></div>
-
-        <div class="hr"></div>
-        <h3 style="margin:0 0 8px 0;font-size:14px">Quem paga pra quem</h3>
-        <div class="tiny" style="margin-bottom:10px">Sugestão com poucas transferências para zerar tudo.</div>
-        <div id="settlement"></div>
+        <div class="tiny">Abra depois — primeiro salve 1 despesa 😉</div>
       </div>
     </div>
 
     <div class="card">
-      <h3 style="margin:0 0 8px 0;font-size:14px">Fluxo simples</h3>
       <div class="tiny">
-        1) Vá em <b>Pessoas</b> e adicione todo mundo.<br/>
-        2) Em <b>Despesas</b>, preencha <b>Descrição da despesa</b>, valor e participantes.<br/>
-        3) Veja <b>Resumo</b> e use “Quem paga pra quem”.<br/>
-        4) Clique em <b>Compartilhar link</b> e mande no grupo.
-      </div>
-      <div class="hr"></div>
-      <div class="tiny">
-        Dica: para ficar “de boa” e sem discussão, use <b>Igual</b>. Use <b>Pesos</b> só quando for necessário.
+        <b>Pra salvar:</b> preencha <b>Descrição da despesa</b> (agora está aqui em cima), valor, e clique <b>Salvar</b>.
       </div>
     </div>
   </div>
@@ -375,20 +329,19 @@
   function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
   function $(id){ return document.getElementById(id); }
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#39;");
-  }
-  const LS_KEY = "racha_moss_v1";
+  const LS_KEY = "racha_moss_v2";
   const toastEl = $("toast");
+  const alertEl = $("alert");
 
   function showToast(msg){
     toastEl.textContent = msg;
     toastEl.classList.add("show");
-    setTimeout(()=>toastEl.classList.remove("show"), 1700);
+    setTimeout(()=>toastEl.classList.remove("show"), 1600);
   }
-
+  function showAlert(msg){
+    alertEl.textContent = msg;
+    alertEl.style.display = msg ? "block" : "none";
+  }
   function today(){ return new Date().toISOString().slice(0,10); }
 
   function toCents(v){
@@ -397,20 +350,18 @@
     if(!Number.isFinite(n)) return null;
     return Math.round(n * 100);
   }
-  function centsToInput(cents){
-    const abs = Math.abs(cents);
-    const whole = Math.floor(abs/100);
-    const frac = String(abs%100).padStart(2,"0");
-    return whole + "," + frac;
-  }
-  function money(cents){
-    const cur = state.currency;
+  function money(cur, cents){
     const sign = cents < 0 ? "-" : "";
     const abs = Math.abs(cents);
     const whole = Math.floor(abs/100);
     const frac = String(abs%100).padStart(2,"0");
     const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return sign + cur + " " + wholeStr + "," + frac;
+  }
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#39;");
   }
 
   const state = {
@@ -429,59 +380,6 @@
     try{ Object.assign(state, JSON.parse(raw)); return true; }catch{ return false; }
   }
 
-  function encodeData(obj){
-    const json = JSON.stringify(obj);
-    return btoa(unescape(encodeURIComponent(json)));
-  }
-  function decodeData(b64){
-    const json = decodeURIComponent(escape(atob(b64)));
-    return JSON.parse(json);
-  }
-  function loadFromHashIfAny(){
-    const h = location.hash ? location.hash.slice(1) : "";
-    if(!h) return false;
-    const params = new URLSearchParams(h);
-    const data = params.get("data");
-    const mode = params.get("mode");
-    if(!data) return false;
-    try{
-      const obj = decodeData(data);
-      state.groupName = obj.groupName ?? state.groupName;
-      state.currency  = obj.currency ?? state.currency;
-      state.people    = Array.isArray(obj.people) ? obj.people : [];
-      state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
-      state.mode      = (mode === "view") ? "view" : "edit";
-      state.editingExpenseId = null;
-      saveLocal();
-      return true;
-    }catch(e){ console.warn(e); return false; }
-  }
-  function makeShareLink(viewOnly){
-    const payload = {
-      groupName: state.groupName,
-      currency: state.currency,
-      people: state.people,
-      expenses: state.expenses
-    };
-    const data = encodeData(payload);
-    const params = new URLSearchParams();
-    params.set("data", data);
-    params.set("mode", viewOnly ? "view" : "edit");
-    return location.origin + location.pathname + "#" + params.toString();
-  }
-  async function copyToClipboard(text){
-    try{ await navigator.clipboard.writeText(text); return true; }
-    catch{
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand("copy");
-      ta.remove();
-      return ok;
-    }
-  }
-
   function setTab(name){
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
     $("tab-despesas").classList.toggle("hide", name!=="despesas");
@@ -489,29 +387,6 @@
     $("tab-resumo").classList.toggle("hide", name!=="resumo");
   }
   document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>setTab(t.dataset.tab)));
-
-  function ensureExpenseParticipants(ex){
-    const map = new Map((ex.participants||[]).map(pp=>[pp.personId, pp]));
-    ex.participants = state.people.map(p=>{
-      const prev = map.get(p.id);
-      return { personId:p.id, included: prev ? !!prev.included : true, weight: (prev && prev.weight!=null) ? prev.weight : 1 };
-    });
-  }
-
-  let draftExpense = null;
-  function getDraftExpense(){
-    if(draftExpense) return deepClone(draftExpense);
-    return {
-      id: state.editingExpenseId || uid(),
-      desc: $("expDesc").value.trim(),
-      date: $("expDate").value || "",
-      payerId: $("expPayer").value || "",
-      amountCents: toCents($("expAmount").value),
-      splitType: $("splitType").value,
-      participants: []
-    };
-  }
-  function setDraftExpense(ex){ draftExpense = deepClone(ex); }
 
   function renderPayerOptions(){
     const sel = $("expPayer");
@@ -531,20 +406,46 @@
     });
   }
 
+  function ensureParticipantsDraft(ex){
+    const map = new Map((ex.participants||[]).map(pp=>[pp.personId, pp]));
+    ex.participants = state.people.map(p=>{
+      const prev = map.get(p.id);
+      return { personId:p.id, included: prev ? !!prev.included : true, weight: (prev && prev.weight!=null) ? prev.weight : 1 };
+    });
+  }
+
+  let draftExpense = null;
+  function getDraftExpense(){
+    const ex = draftExpense ? deepClone(draftExpense) : {
+      id: state.editingExpenseId || uid(),
+      desc: $("expDesc").value.trim(),
+      date: $("expDate").value || "",
+      payerId: $("expPayer").value || "",
+      amountCents: toCents($("expAmount").value),
+      splitType: $("splitType").value,
+      participants: []
+    };
+    ex.desc = $("expDesc").value.trim();
+    ex.date = $("expDate").value || "";
+    ex.payerId = $("expPayer").value || "";
+    ex.amountCents = toCents($("expAmount").value);
+    ex.splitType = $("splitType").value;
+    ensureParticipantsDraft(ex);
+    return ex;
+  }
+  function setDraftExpense(ex){ draftExpense = deepClone(ex); }
+
   function renderParticipants(){
     const box = $("participants");
     box.innerHTML = "";
-
     if(!state.people.length){
       box.innerHTML = `<div class="tiny">Vá em <b>Pessoas</b> e adicione quem participa.</div>`;
       return;
     }
 
-    let ex = getDraftExpense();
-    ensureExpenseParticipants(ex);
+    const ex = getDraftExpense();
     setDraftExpense(ex);
-
-    const split = $("splitType").value;
+    const split = ex.splitType;
 
     ex.participants.forEach(pp=>{
       const person = state.people.find(p=>p.id===pp.personId);
@@ -560,16 +461,17 @@
 
     box.querySelectorAll("[data-inc]").forEach(ch=>{
       ch.addEventListener("change", ()=>{
-        let ex2 = getDraftExpense(); ensureExpenseParticipants(ex2);
+        const ex2 = getDraftExpense();
         const pid = ch.getAttribute("data-inc");
         const pp = ex2.participants.find(x=>x.personId===pid);
         if(pp) pp.included = ch.checked;
         setDraftExpense(ex2);
       });
     });
+
     box.querySelectorAll("[data-w]").forEach(inp=>{
       inp.addEventListener("input", ()=>{
-        let ex2 = getDraftExpense(); ensureExpenseParticipants(ex2);
+        const ex2 = getDraftExpense();
         const pid = inp.getAttribute("data-w");
         const pp = ex2.participants.find(x=>x.personId===pid);
         const n = Number(inp.value);
@@ -579,28 +481,44 @@
     });
   }
 
-  function fillExpenseForm(ex){
-    state.editingExpenseId = ex ? ex.id : null;
+  function renderExpenses(){
+    const tbody = $("expensesTbody");
+    const empty = $("emptyExpenses");
+    tbody.innerHTML = "";
 
-    $("expDesc").value = ex ? (ex.desc || "") : "";
-    $("expDate").value = ex ? (ex.date || today()) : today();
-    $("splitType").value = ex ? (ex.splitType || "equal") : "equal";
-    $("expAmount").value = ex && ex.amountCents!=null ? centsToInput(ex.amountCents) : "";
+    if(!state.expenses.length){
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
 
-    renderPayerOptions();
-    $("expPayer").value = ex ? (ex.payerId || state.people[0]?.id || "") : (state.people[0]?.id || "");
+    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
+    const rows = deepClone(state.expenses).sort((a,b)=> (b.date||"").localeCompare(a.date||""));
 
-    draftExpense = deepClone(ex || {
-      id: uid(),
-      desc: "",
-      date: $("expDate").value,
-      payerId: $("expPayer").value,
-      amountCents: null,
-      splitType: $("splitType").value,
-      participants: []
+    rows.forEach(ex=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(ex.date || "—")}</td>
+        <td>${escapeHtml(ex.desc || "—")}</td>
+        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
+        <td><span class="badge">${money(state.currency, ex.amountCents || 0)}</span></td>
+        <td style="text-align:right">
+          <button class="mini" type="button" data-del="${ex.id}">Excluir</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
-    ensureExpenseParticipants(draftExpense);
-    renderParticipants();
+
+    tbody.querySelectorAll("[data-del]").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        if(state.mode==="view"){ showToast("Somente leitura."); return; }
+        const id = b.getAttribute("data-del");
+        state.expenses = state.expenses.filter(x=>x.id!==id);
+        saveLocal();
+        renderExpenses();
+        showToast("Removido.");
+      });
+    });
   }
 
   function renderPeople(){
@@ -619,7 +537,7 @@
         <div class="row">
           <div style="flex:1.2">
             <label>Nome</label>
-            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}"/>
           </div>
           <div style="flex:.55">
             <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
@@ -636,7 +554,10 @@
         const person = state.people.find(x=>x.id===id);
         if(person){
           person.name = e.target.value.trim() || "Sem nome";
-          saveLocal(); renderAll();
+          saveLocal();
+          renderPayerOptions();
+          renderParticipants();
+          renderExpenses();
         }
       });
     });
@@ -650,214 +571,71 @@
           ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
           if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
         });
-        saveLocal(); renderAll(); showToast("Pessoa removida.");
+        saveLocal();
+        renderAll();
+        showToast("Pessoa removida.");
       });
     });
   }
 
-  function renderExpenses(){
-    const tbody = $("expensesTbody");
-    const empty = $("emptyExpenses");
-    tbody.innerHTML = "";
-    if(!state.expenses.length){ empty.style.display="block"; return; }
-    empty.style.display="none";
-
-    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
-    const rows = deepClone(state.expenses).sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-
-    rows.forEach(ex=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${escapeHtml(ex.date || "—")}</td>
-        <td>${escapeHtml(ex.desc || "—")}</td>
-        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
-        <td><span class="badge">${money(ex.amountCents || 0)}</span></td>
-        <td>
-          <div class="t-actions">
-            <button class="mini" type="button" data-edit="${ex.id}">Editar</button>
-            <button class="mini" type="button" data-del="${ex.id}">Excluir</button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    tbody.querySelectorAll("[data-edit]").forEach(b=>{
-      b.addEventListener("click", ()=>{
-        const id = b.getAttribute("data-edit");
-        const ex = state.expenses.find(x=>x.id===id);
-        if(!ex) return;
-        fillExpenseForm(deepClone(ex));
-        setTab("despesas");
-        showToast("Editando despesa.");
-      });
-    });
-
-    tbody.querySelectorAll("[data-del]").forEach(b=>{
-      b.addEventListener("click", ()=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = b.getAttribute("data-del");
-        state.expenses = state.expenses.filter(x=>x.id!==id);
-        saveLocal(); renderAll(); showToast("Despesa removida.");
-      });
-    });
+  function clearInvalid(){
+    $("expDesc").classList.remove("invalid");
+    $("expAmount").classList.remove("invalid");
+    showAlert("");
   }
 
-  function computeBalances(){
-    const bal = new Map(state.people.map(p=>[p.id, 0]));
-
-    state.expenses.forEach(ex=>{
-      const amount = ex.amountCents || 0;
-      bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
-
-      const parts = (ex.participants||[]).filter(p=>p.included);
-      if(!parts.length) return;
-
-      if(ex.splitType==="weights"){
-        const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-        if(totalW<=0) return;
-
-        const shares = parts.map(p=>{
-          const w = Number(p.weight)||0;
-          return Math.floor(amount * (w/totalW));
-        });
-        let base = shares.reduce((a,b)=>a+b,0);
-        let rem = amount - base;
-        for(let i=0;i<parts.length && rem>0;i++){ shares[i]+=1; rem-=1; }
-
-        parts.forEach((p,i)=>{
-          bal.set(p.personId, (bal.get(p.personId)||0) - shares[i]);
-        });
-
-      } else {
-        const n = parts.length;
-        const share = Math.floor(amount / n);
-        let rem = amount - (share*n);
-        parts.forEach(p=>{
-          const extra = rem>0 ? 1 : 0;
-          if(rem>0) rem--;
-          bal.set(p.personId, (bal.get(p.personId)||0) - (share + extra));
-        });
-      }
-    });
-
-    return bal;
-  }
-
-  function computeSettlement(bal){
-    const creditors=[], debtors=[];
-    for(const [pid,cents] of bal.entries()){
-      if(cents>0) creditors.push([pid,cents]);
-      else if(cents<0) debtors.push([pid,-cents]);
+  function validate(ex){
+    clearInvalid();
+    if(!state.people.length){
+      showAlert("⚠️ Adicione pessoas primeiro (aba Pessoas).");
+      return false;
     }
-    creditors.sort((a,b)=>b[1]-a[1]);
-    debtors.sort((a,b)=>b[1]-a[1]);
-    const transfers=[];
-    let i=0,j=0;
-    while(i<debtors.length && j<creditors.length){
-      const x = Math.min(debtors[i][1], creditors[j][1]);
-      transfers.push({from:debtors[i][0], to:creditors[j][0], amount:x});
-      debtors[i][1]-=x; creditors[j][1]-=x;
-      if(debtors[i][1]===0) i++;
-      if(creditors[j][1]===0) j++;
+    if(!ex.desc){
+      $("expDesc").classList.add("invalid");
+      showAlert("⚠️ Falta a DESCRIÇÃO DA DESPESA (ex.: Jantar).");
+      $("expDesc").focus();
+      return false;
     }
-    return transfers;
-  }
-
-  function renderSummary(){
-    const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
-    $("kpiTotal").textContent = money(total);
-    $("kpiN").textContent = String(state.people.length);
-    $("kpiE").textContent = String(state.expenses.length);
-
-    const bal = computeBalances();
-    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
-
-    const items = state.people.map(p=>({name:p.name, v:(bal.get(p.id)||0)})).sort((a,b)=>b.v-a.v);
-
-    const balancesDiv = $("balances");
-    balancesDiv.innerHTML = "";
-    if(!items.length){
-      balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas e despesas para ver o resumo.</div>`;
-    } else {
-      const table = document.createElement("table");
-      table.innerHTML = `
-        <thead><tr><th>Pessoa</th><th>Saldo</th><th>Significado</th></tr></thead>
-        <tbody>
-          ${items.map(it=>{
-            const cls = it.v>0 ? "pos" : (it.v<0 ? "neg" : "zero");
-            const interp = it.v>0 ? "Tem a receber" : (it.v<0 ? "Deve pagar" : "Zerado");
-            return `
-              <tr>
-                <td>${escapeHtml(it.name)}</td>
-                <td><span class="badge ${cls}">${money(it.v)}</span></td>
-                <td style="color:var(--muted)">${interp}</td>
-              </tr>`;
-          }).join("")}
-        </tbody>`;
-      balancesDiv.appendChild(table);
+    if(!ex.date){
+      showAlert("⚠️ Falta a data.");
+      return false;
     }
-
-    const transfers = computeSettlement(bal);
-    const settlementDiv = $("settlement");
-    settlementDiv.innerHTML = "";
-    if(!transfers.length){
-      settlementDiv.innerHTML = `<div class="tiny">Nada a liquidar por enquanto.</div>`;
-    } else {
-      const box = document.createElement("div");
-      box.className = "card";
-      box.style.background = "rgba(255,255,255,.03)";
-      box.innerHTML = `
-        <div class="tiny">
-          ${transfers.map(t=>{
-            return `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
-              <b>${escapeHtml(peopleMap.get(t.from) || "?")}</b> paga <b>${escapeHtml(peopleMap.get(t.to) || "?")}</b>
-              <span class="badge" style="margin-left:8px">${money(t.amount)}</span>
-            </div>`;
-          }).join("")}
-        </div>`;
-      settlementDiv.appendChild(box);
+    if(ex.amountCents==null || ex.amountCents<=0){
+      $("expAmount").classList.add("invalid");
+      showAlert("⚠️ Valor inválido (use 125,00).");
+      $("expAmount").focus();
+      return false;
     }
-  }
-
-  function applyModeLock(){
-    const lock = state.mode === "view";
-    $("btnAddPerson").disabled = lock;
-    $("btnSaveExp").disabled = lock;
-    $("btnClearExp").disabled = lock;
-
-    ["personName","expDesc","expDate","expPayer","expAmount","splitType","groupName","currency"].forEach(id=>{
-      $(id).disabled = lock;
-    });
-
-    document.querySelectorAll("[data-del-person],[data-person-name],[data-edit],[data-del],[data-inc],[data-w]").forEach(el=>{
-      el.disabled = lock;
-    });
-  }
-
-  function validateExpense(ex){
-    if(!state.people.length) return "Adicione pessoas primeiro (aba Pessoas).";
-    if(!ex.desc){ return "Preencha a DESCRIÇÃO DA DESPESA."; }
-    if(!ex.date) return "Escolha a data.";
-    if(!ex.payerId) return "Selecione quem pagou.";
-    if(ex.amountCents==null || ex.amountCents<=0) return "Valor inválido.";
-
-    const included = (ex.participants||[]).filter(p=>p.included);
-    if(!included.length) return "Selecione pelo menos 1 participante.";
-
+    const included = ex.participants.filter(p=>p.included);
+    if(!included.length){
+      showAlert("⚠️ Selecione pelo menos 1 participante.");
+      return false;
+    }
     if(ex.splitType==="weights"){
       const sumW = included.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-      if(sumW<=0) return "Em pesos, a soma dos pesos precisa ser > 0.";
+      if(sumW<=0){
+        showAlert("⚠️ Em 'pesos', some pesos > 0.");
+        return false;
+      }
     }
-    return null;
+    return true;
   }
 
-  // Events
+  // top actions
   $("btnShare").addEventListener("click", async ()=>{
-    const link = makeShareLink(true);
-    const ok = await copyToClipboard(link);
-    if(ok) showToast("Link copiado!");
-    else { showToast("Copie manualmente."); prompt("Copie o link:", link); }
+    const payload = {groupName:state.groupName,currency:state.currency,people:state.people,expenses:state.expenses};
+    const data = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const params = new URLSearchParams();
+    params.set("data", data);
+    params.set("mode", "view");
+    const link = location.origin + location.pathname + "#" + params.toString();
+
+    try{
+      await navigator.clipboard.writeText(link);
+      showToast("Link copiado!");
+    }catch{
+      prompt("Copie o link:", link);
+    }
   });
 
   $("btnExport").addEventListener("click", ()=>{
@@ -886,10 +664,7 @@
         state.people    = Array.isArray(obj.people) ? obj.people : [];
         state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
         state.mode = "edit";
-        state.editingExpenseId = null;
-        draftExpense = null;
         saveLocal();
-        location.hash = "";
         renderAll();
         showToast("Importado.");
       }catch{
@@ -900,23 +675,16 @@
   });
 
   $("btnReset").addEventListener("click", ()=>{
-    if(!confirm("Resetar tudo (pessoas e despesas)?")) return;
-    state.groupName = "Meu grupo";
-    state.currency = "R$";
-    state.mode = "edit";
-    state.people = [];
-    state.expenses = [];
-    state.editingExpenseId = null;
-    draftExpense = null;
+    if(!confirm("Resetar tudo?")) return;
+    localStorage.removeItem(LS_KEY);
     location.hash = "";
-    saveLocal();
-    renderAll();
-    showToast("Resetado.");
+    location.reload();
   });
 
   $("mode").addEventListener("change", ()=>{
     state.mode = $("mode").value;
-    saveLocal(); renderAll();
+    saveLocal();
+    renderAll();
     showToast(state.mode==="view" ? "Somente leitura." : "Editável.");
   });
 
@@ -926,56 +694,43 @@
   });
   $("currency").addEventListener("change", ()=>{
     state.currency = $("currency").value;
-    saveLocal(); renderAll();
+    saveLocal();
+    renderAll();
   });
 
-  $("splitType").addEventListener("change", ()=>{
-    let ex = getDraftExpense();
-    ex.splitType = $("splitType").value;
-    ensureExpenseParticipants(ex);
-    setDraftExpense(ex);
-    renderParticipants();
-  });
-
-  ["expDesc","expDate","expPayer","expAmount"].forEach(id=>{
-    $(id).addEventListener("input", ()=>{
-      let ex = getDraftExpense();
-      ensureExpenseParticipants(ex);
-      setDraftExpense(ex);
-    });
-  });
+  $("splitType").addEventListener("change", renderParticipants);
+  $("expDesc").addEventListener("input", clearInvalid);
+  $("expAmount").addEventListener("input", clearInvalid);
 
   $("btnClearExp").addEventListener("click", ()=>{
-    state.editingExpenseId = null;
-    draftExpense = null;
-    fillExpenseForm(null);
+    $("expDesc").value = "";
+    $("expAmount").value = "";
+    $("splitType").value = "equal";
+    $("expDate").value = today();
+    clearInvalid();
+    renderParticipants();
     showToast("Limpo.");
   });
 
   $("btnSaveExp").addEventListener("click", ()=>{
     if(state.mode==="view"){ showToast("Somente leitura."); return; }
 
-    // força leitura do DOM agora (evita qualquer bug de rascunho)
-    let ex = getDraftExpense();
-    ensureExpenseParticipants(ex);
+    const ex = getDraftExpense();
+    if(!validate(ex)) return;
 
-    const err = validateExpense(ex);
-    if(err){
-      showToast(err);
-      if(!ex.desc){ $("expDesc").focus(); }
-      return;
-    }
+    state.expenses.push({
+      id: uid(),
+      desc: ex.desc,
+      date: ex.date,
+      payerId: ex.payerId || state.people[0]?.id || "",
+      amountCents: ex.amountCents,
+      splitType: ex.splitType,
+      participants: ex.participants
+    });
 
-    const idx = state.expenses.findIndex(x=>x.id===ex.id);
-    if(idx>=0) state.expenses[idx] = ex;
-    else state.expenses.push(ex);
-
-    state.editingExpenseId = null;
-    draftExpense = null;
     saveLocal();
-    fillExpenseForm(null);
-    renderAll();
-    showToast("Despesa salva.");
+    renderExpenses();
+    showToast("SALVO ✅");
   });
 
   $("btnAddPerson").addEventListener("click", ()=>{
@@ -985,38 +740,39 @@
     const id = uid();
     state.people.push({id, name});
     $("personName").value = "";
-
-    state.expenses.forEach(ex=>{
-      ex.participants = ex.participants || [];
-      ex.participants.push({personId:id, included:true, weight:1});
-    });
-
-    saveLocal(); renderAll();
+    saveLocal();
+    renderAll();
     showToast("Pessoa adicionada.");
   });
+
+  function applyModeLock(){
+    const lock = state.mode === "view";
+    ["groupName","currency","expDesc","expDate","expPayer","expAmount","splitType","personName"].forEach(id=>$(id).disabled = lock);
+    ["btnAddPerson","btnSaveExp","btnClearExp"].forEach(id=>$(id).disabled = lock);
+    document.querySelectorAll("[data-inc],[data-w]").forEach(el=>el.disabled = lock);
+  }
 
   function renderAll(){
     $("groupName").value = state.groupName || "Meu grupo";
     $("currency").value = state.currency || "R$";
     $("mode").value = state.mode || "edit";
-
     if(!$("expDate").value) $("expDate").value = today();
 
     renderPeople();
     renderPayerOptions();
+    if(state.people.length && !$("expPayer").value) $("expPayer").value = state.people[0].id;
+
     renderParticipants();
     renderExpenses();
-    renderSummary();
     applyModeLock();
   }
 
-  // Init
+  // init
   loadLocal();
-  loadFromHashIfAny();
 
-  // demo mínimo se vazio
-  if(!state.people.length && !state.expenses.length){
-    state.groupName = "Exemplo (edite ou resete)";
+  // demo (se vazio)
+  if(!state.people.length){
+    state.groupName = "Exemplo";
     state.currency = "R$";
     state.people = [
       {id: uid(), name:"Ernandes"},
@@ -1027,7 +783,7 @@
     saveLocal();
   }
 
-  fillExpenseForm(null);
+  $("expDate").value = today();
   renderAll();
 })();
 </script>
