@@ -3,177 +3,202 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Racha — Divisão de Contas (Moss v2)</title>
-  <meta name="theme-color" content="#0b1410"/>
+  <title>Racha — Contas entre amigos</title>
+  <meta name="theme-color" content="#0f2a1f"/>
   <style>
     :root{
-      --bg:#0b1410;
-      --card:#0f1d16;
-      --text:#eef7f0;
-      --muted:#b8cbbb;
-      --line:rgba(255,255,255,.12);
-      --shadow:0 12px 30px rgba(0,0,0,.40);
-      --r:16px;
+      --bg:#f6f7f8;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --shadow:0 10px 24px rgba(2,6,23,.08);
+      --r:18px;
 
-      --moss:#4b7a4b;
-      --gold:#d4b46a;
-      --red:#ef4444;
+      --moss:#0f2a1f;
+      --moss2:#1f513c;
+      --gold:#c6a44b;
+      --ok:#16a34a;
+      --bad:#ef4444;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(900px 650px at 12% -10%, rgba(75,122,75,.22), transparent 55%),
-        radial-gradient(900px 650px at 95% 0%, rgba(212,180,106,.16), transparent 55%),
-        var(--bg);
-      color:var(--text);
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:16px 14px 40px}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 12px 32px}
+
     header{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      position:sticky; top:0; z-index:20;
-      padding:12px 0 10px;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(11,20,16,.86), rgba(11,20,16,.46));
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:12px;border:1px solid var(--line);border-radius:var(--r);
+      background:linear-gradient(135deg, #ffffff, #ffffff);
+      box-shadow:var(--shadow);
+      position:sticky;top:10px;z-index:20;
     }
     .brand{display:flex;gap:12px;align-items:center}
     .logo{
-      width:40px;height:40px;border-radius:14px;
-      background: conic-gradient(from 210deg, var(--moss), var(--gold), var(--moss), var(--gold), var(--moss));
-      box-shadow: 0 10px 26px rgba(0,0,0,.45);
+      width:42px;height:42px;border-radius:14px;
+      background:conic-gradient(from 230deg, var(--moss2), var(--gold), var(--moss), var(--gold), var(--moss2));
+      box-shadow:0 10px 18px rgba(2,6,23,.12);
     }
     h1{font-size:16px;margin:0}
-    .sub{color:var(--muted);font-size:12px;margin-top:2px}
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 8px 14px rgba(2,6,23,.06);
+    }
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(31,81,60,.10), rgba(198,164,75,.16));
+      border-color:rgba(31,81,60,.25);
+    }
+    .btn.good{
+      background:linear-gradient(135deg, rgba(22,163,74,.10), rgba(31,81,60,.10));
+      border-color:rgba(22,163,74,.25);
+    }
+    .btn.bad{
+      background:linear-gradient(135deg, rgba(239,68,68,.10), rgba(198,164,75,.10));
+      border-color:rgba(239,68,68,.25);
+    }
+
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}
+    @media (max-width:940px){.grid{grid-template-columns:1fr}}
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background:var(--card);
       border:1px solid var(--line);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
       padding:14px;
     }
-    .grid{display:grid;grid-template-columns: 1.1fr .9fr; gap:14px; margin-top:12px}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
 
-    label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px 2px}
-    input, select{
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .tab{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:9px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:1000;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .tab.active{
+      color:var(--text);
+      border-color:rgba(31,81,60,.30);
+      background:linear-gradient(135deg, rgba(31,81,60,.08), rgba(198,164,75,.10));
+    }
+    .hide{display:none}
+
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+    input,select{
       width:100%;
       border:1px solid var(--line);
-      background: rgba(18,37,27,.75);
-      color:var(--text);
-      border-radius: 12px;
+      border-radius:14px;
       padding:11px 12px;
+      background:#fff;
+      color:var(--text);
       outline:none;
     }
-    input::placeholder{color:rgba(238,247,240,.55)}
+    input::placeholder{color:#94a3b8}
     input[type="date"]{padding:10px 12px}
 
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
     .row > *{flex:1}
 
-    .btn{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      border-radius: 12px;
-      padding:11px 12px;
-      font-weight:900;
-      cursor:pointer;
-      transition:.15s transform,.15s opacity;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(75,122,75,.34), rgba(212,180,106,.20));
-      border-color: rgba(212,180,106,.35);
-    }
-    .btn.good{
-      background: linear-gradient(135deg, rgba(75,122,75,.42), rgba(212,180,106,.10));
-      border-color: rgba(75,122,75,.55);
-    }
-    .btn.bad{
-      background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(212,180,106,.08));
-      border-color: rgba(239,68,68,.38);
-    }
-    .btn.ghost{background: transparent}
-
-    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .tab{
-      padding:9px 12px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.05);cursor:pointer;font-weight:1000;font-size:12px;
-    }
-    .tab.active{border-color:rgba(212,180,106,.55); background: rgba(212,180,106,.14)}
-    .hide{display:none}
-
     .hr{height:1px;background:var(--line);margin:12px 0}
-    .tiny{font-size:12px;color:var(--muted);line-height:1.45}
+    .tiny{font-size:12px;color:var(--muted);line-height:1.5}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;font-weight:1000;
+    }
+    .badge{
+      display:inline-flex;align-items:center;
+      padding:4px 8px;border-radius:999px;
+      font-size:12px;font-weight:1000;
+      border:1px solid rgba(31,81,60,.22);
+      background:rgba(31,81,60,.06);
+    }
+    .pos{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.08)}
+    .neg{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
     .members{
-      display:flex; flex-wrap:wrap; gap:10px;
+      display:flex;flex-wrap:wrap;gap:10px;
       border:1px solid var(--line);
-      background: rgba(18,37,27,.55);
-      border-radius: 14px;
+      border-radius:16px;
       padding:10px;
+      background:#fff;
     }
     .member{
-      display:flex; align-items:center; gap:8px;
+      display:flex;align-items:center;gap:8px;
       border:1px solid var(--line);
-      background: rgba(255,255,255,.05);
-      border-radius: 999px;
+      border-radius:999px;
       padding:8px 10px;
+      background:#fff;
       font-size:12px;
     }
     .member input[type="checkbox"]{width:16px;height:16px}
-    .member .w{width:62px;padding:6px 8px;border-radius:10px;font-weight:1000}
+    .member .w{width:66px;padding:6px 8px;border-radius:12px;font-weight:1000}
 
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
     th{color:var(--muted);font-size:12px;font-weight:1000}
     .t-actions{display:flex;gap:8px;justify-content:flex-end}
     .mini{
-      padding:7px 10px;border-radius:10px;font-size:12px;font-weight:1000;
-      background: rgba(255,255,255,.06); border:1px solid var(--line); cursor:pointer;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:7px 10px;border-radius:12px;
+      font-size:12px;font-weight:1000;
+      cursor:pointer;
     }
 
-    .badge{
-      display:inline-flex; align-items:center;
-      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:1000;
-      border:1px solid rgba(212,180,106,.35);
-      background: rgba(212,180,106,.10);
-      color: var(--text);
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media (max-width:560px){.kpis{grid-template-columns:1fr}}
+    .kpi{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:#fff;
     }
+    .kpi .v{font-size:18px;font-weight:1100}
+    .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
 
-    /* Aviso fixo perto do salvar */
     .alert{
-      border:1px solid rgba(239,68,68,.45);
-      background: rgba(239,68,68,.10);
-      color: #ffd6d6;
-      border-radius: 12px;
+      border:1px solid rgba(239,68,68,.25);
+      background:rgba(239,68,68,.07);
+      border-radius:14px;
       padding:10px 12px;
       font-size:12px;
-      font-weight:900;
+      font-weight:1000;
       display:none;
+    }
+    .invalid{border-color:rgba(239,68,68,.55)!important; box-shadow:0 0 0 3px rgba(239,68,68,.12)}
+    .toast{
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:14px;z-index:80;
+      background:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:10px 12px;
+      box-shadow:var(--shadow);
+      font-size:13px;font-weight:900;
+      opacity:0;pointer-events:none;transition:.2s opacity,.2s transform;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-2px)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .bigShare{
+      border:1px solid rgba(31,81,60,.22);
+      background:linear-gradient(135deg, rgba(31,81,60,.08), rgba(198,164,75,.10));
+      border-radius:18px;
+      padding:12px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
       margin-top:10px;
     }
-    .invalid{
-      border-color: rgba(239,68,68,.65) !important;
-      box-shadow: 0 0 0 3px rgba(239,68,68,.18);
-    }
-
-    .toast{
-      position:fixed; left:50%; transform:translateX(-50%);
-      bottom:16px; z-index:50;
-      background: rgba(18,37,27,.96);
-      border:1px solid rgba(212,180,106,.28);
-      color:var(--text);
-      padding:10px 12px; border-radius: 12px;
-      box-shadow: var(--shadow);
-      font-size:13px;
-      opacity:0; pointer-events:none; transition:.2s opacity, .2s transform;
-    }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
   </style>
 </head>
 <body>
@@ -182,44 +207,38 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>Racha — Divisão de Contas</h1>
-        <div class="sub">Tema musgo / dinheiro • Compartilhável por link • Offline</div>
+        <h1>Racha — Contas entre amigos</h1>
+        <div class="sub">Claro • editável • funciona como calculadora • exporta/ importa JSON</div>
       </div>
     </div>
-    <div class="top-actions">
-      <button class="btn primary" id="btnShare" type="button">Compartilhar link</button>
-      <button class="btn" id="btnExport" type="button">Exportar</button>
-      <button class="btn" id="btnImport" type="button">Importar</button>
+    <div class="actions">
+      <button class="btn primary" id="btnCopyFunny" type="button">Copiar resumo funny</button>
+      <button class="btn" id="btnExport" type="button">Baixar JSON</button>
+      <button class="btn" id="btnImport" type="button">Importar JSON</button>
       <button class="btn bad" id="btnReset" type="button">Resetar</button>
     </div>
   </header>
 
-  <div class="card">
-    <div class="row">
-      <div style="flex:1.2">
-        <label>Nome do grupo</label>
-        <input id="groupName" placeholder="Ex.: Viagem • Airbnb • Churrasco" autocomplete="off"/>
-      </div>
-      <div>
-        <label>Moeda</label>
-        <select id="currency">
-          <option value="R$">R$ (Real)</option>
-          <option value="€">€ (Euro)</option>
-          <option value="$">$ (Dólar)</option>
-        </select>
-      </div>
-      <div>
-        <label>Modo</label>
-        <select id="mode">
-          <option value="edit">Editável</option>
-          <option value="view">Somente leitura (no link)</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
   <div class="grid">
+    <!-- LEFT -->
     <div class="card">
+      <div class="row">
+        <div style="flex:1.25">
+          <label>Nome do grupo</label>
+          <input id="groupName" placeholder="Ex.: Airbnb Holanda / Churrasco / Viagem" autocomplete="off"/>
+        </div>
+        <div>
+          <label>Moeda</label>
+          <select id="currency">
+            <option value="R$">R$ (Real)</option>
+            <option value="€">€ (Euro)</option>
+            <option value="$">$ (Dólar)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
       <div class="tabs">
         <button class="tab active" data-tab="despesas" type="button">Despesas</button>
         <button class="tab" data-tab="pessoas" type="button">Pessoas</button>
@@ -227,13 +246,11 @@
       </div>
 
       <!-- DESPESAS -->
-      <div id="tab-despesas">
-
-        <!-- DEIXEI A DESCRIÇÃO AQUI (PERTO DO SALVAR) -->
+      <section id="tab-despesas">
         <div class="row">
           <div style="flex:1.2">
             <label>Descrição da despesa *</label>
-            <input id="expDesc" placeholder="Ex.: Jantar, Mercado, Uber" autocomplete="off"/>
+            <input id="expDesc" placeholder="Ex.: Almoço, Uber, Mercado" autocomplete="off"/>
           </div>
           <div style="flex:.7">
             <label>Data</label>
@@ -242,19 +259,19 @@
         </div>
 
         <div class="row" style="margin-top:10px">
-          <div style="flex:.9">
+          <div style="flex:.95">
             <label>Quem pagou</label>
             <select id="expPayer"></select>
           </div>
-          <div style="flex:.6">
+          <div style="flex:.7">
             <label>Valor</label>
             <input id="expAmount" inputmode="decimal" placeholder="Ex.: 125,00"/>
           </div>
-          <div style="flex:.8">
+          <div style="flex:.9">
             <label>Divisão</label>
             <select id="splitType">
-              <option value="equal">Igual</option>
-              <option value="weights">Por pesos</option>
+              <option value="equal">Igual (divide igualmente)</option>
+              <option value="weights">Por pesos (cotas)</option>
             </select>
           </div>
         </div>
@@ -263,60 +280,102 @@
           <label>Participantes</label>
           <div class="members" id="participants"></div>
           <div class="tiny" style="margin-top:8px">
-            “Por pesos”: coloque cotas (ex.: quem consumiu mais = 2, quem consumiu menos = 1).
+            Dica rápida: em <b>Pesos</b>, quem consumiu mais pode ser 2, quem consumiu menos 1.
           </div>
         </div>
 
-        <div id="alert" class="alert"></div>
+        <div id="alert" class="alert" style="margin-top:10px"></div>
 
         <div class="row" style="margin-top:12px">
           <div style="flex:1"></div>
-          <div style="flex:.8;display:flex;gap:10px;justify-content:flex-end">
-            <button class="btn ghost" id="btnClearExp" type="button">Limpar</button>
-            <button class="btn good" id="btnSaveExp" type="button">Salvar</button>
+          <div style="flex:.95;display:flex;gap:10px;justify-content:flex-end">
+            <button class="btn" id="btnClearExp" type="button">Limpar</button>
+            <button class="btn good" id="btnAddExpense" type="button">Adicionar</button>
           </div>
         </div>
 
         <div class="hr"></div>
 
-        <div class="tiny" id="emptyExpenses" style="margin:6px 0 10px">Nenhuma despesa ainda.</div>
+        <div class="tiny" id="emptyExpenses">Nenhuma despesa ainda.</div>
         <div style="overflow:auto">
           <table>
             <thead>
-              <tr>
-                <th>Data</th><th>Descrição</th><th>Pagou</th><th>Valor</th><th style="text-align:right">Ações</th>
-              </tr>
+              <tr><th>Data</th><th>Descrição</th><th>Pagou</th><th>Valor</th><th style="text-align:right">Ações</th></tr>
             </thead>
             <tbody id="expensesTbody"></tbody>
           </table>
         </div>
-      </div>
+      </section>
 
       <!-- PESSOAS -->
-      <div id="tab-pessoas" class="hide">
+      <section id="tab-pessoas" class="hide">
         <div class="row">
           <div>
             <label>Adicionar pessoa</label>
             <input id="personName" placeholder="Ex.: Ernandes, Claumir, Áurea" autocomplete="off"/>
           </div>
-          <div style="flex:.55">
+          <div style="flex:.6">
             <button class="btn good" id="btnAddPerson" type="button">Adicionar</button>
           </div>
         </div>
+
         <div class="hr"></div>
+
         <div class="tiny" id="emptyPeople">Nenhuma pessoa cadastrada.</div>
         <div id="peopleList"></div>
-      </div>
+      </section>
 
       <!-- RESUMO -->
-      <div id="tab-resumo" class="hide">
-        <div class="tiny">Abra depois — primeiro salve 1 despesa 😉</div>
-      </div>
+      <section id="tab-resumo" class="hide">
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="kpiTotal">—</div><div class="l">Total gasto</div></div>
+          <div class="kpi"><div class="v" id="kpiEach">—</div><div class="l">Por pessoa (igual)</div></div>
+          <div class="kpi"><div class="v" id="kpiN">—</div><div class="l">Pessoas</div></div>
+        </div>
+
+        <div class="bigShare">
+          <div>
+            <div style="font-weight:1100">📲 Compartilhar só o resumo</div>
+            <div class="tiny">Copia um texto engraçadinho + claro (WhatsApp-ready).</div>
+          </div>
+          <button class="btn primary" id="btnCopyFunny2" type="button">Copiar resumo funny</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h3 style="margin:0 0 8px 0;font-size:14px">Saldos</h3>
+        <div id="balances"></div>
+
+        <div class="hr"></div>
+
+        <h3 style="margin:0 0 8px 0;font-size:14px">Quem paga pra quem</h3>
+        <div class="tiny" style="margin-bottom:8px">Transferências mínimas pra zerar tudo.</div>
+        <div id="settlement"></div>
+
+        <div class="hr"></div>
+
+        <label>Texto do resumo (pronto pra copiar)</label>
+        <textarea id="shareText" class="mono" style="width:100%;min-height:170px;border:1px solid var(--line);border-radius:16px;padding:12px"></textarea>
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="btnCopyText" type="button">Copiar texto acima</button>
+          <button class="btn" id="btnDownloadJson2" type="button">Baixar JSON</button>
+        </div>
+      </section>
     </div>
 
+    <!-- RIGHT -->
     <div class="card">
+      <div class="pill">✅ Calculadora viva: muda algo → recalcula tudo</div>
+      <div class="hr"></div>
       <div class="tiny">
-        <b>Pra salvar:</b> preencha <b>Descrição da despesa</b> (agora está aqui em cima), valor, e clique <b>Salvar</b>.
+        <b>Como usar (bem rápido):</b><br/>
+        1) Vá em <b>Pessoas</b> e adicione todo mundo.<br/>
+        2) Em <b>Despesas</b>, coloque descrição, quem pagou, valor e participantes.<br/>
+        3) Em <b>Resumo</b>, veja quem paga pra quem e copie o texto.
+      </div>
+      <div class="hr"></div>
+      <div class="tiny">
+        <b>Transparência:</b> o JSON contém todas as despesas. Qualquer pessoa pode importar e conferir.
       </div>
     </div>
   </div>
@@ -326,12 +385,17 @@
 
 <script>
 (function(){
-  function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
-  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
-  function $(id){ return document.getElementById(id); }
-  const LS_KEY = "racha_moss_v2";
+  const LS_KEY = "racha_clear_v1";
+  const $ = (id)=>document.getElementById(id);
   const toastEl = $("toast");
   const alertEl = $("alert");
+
+  const state = {
+    groupName:"Exemplo",
+    currency:"€",
+    people:[],
+    expenses:[]
+  };
 
   function showToast(msg){
     toastEl.textContent = msg;
@@ -344,13 +408,28 @@
   }
   function today(){ return new Date().toISOString().slice(0,10); }
 
+  function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  function load(){
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    try{ Object.assign(state, JSON.parse(raw)); return true; }catch{ return false; }
+  }
+
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#39;");
+  }
+  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+
   function toCents(v){
     const s = String(v ?? "").trim().replace(/\./g,"").replace(",",".");
     const n = Number(s);
     if(!Number.isFinite(n)) return null;
     return Math.round(n * 100);
   }
-  function money(cur, cents){
+  function money(cents){
+    const cur = state.currency;
     const sign = cents < 0 ? "-" : "";
     const abs = Math.abs(cents);
     const whole = Math.floor(abs/100);
@@ -358,36 +437,75 @@
     const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return sign + cur + " " + wholeStr + "," + frac;
   }
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#39;");
-  }
 
-  const state = {
-    groupName: "Meu grupo",
-    currency: "R$",
-    mode: "edit",
-    people: [],
-    expenses: [],
-    editingExpenseId: null
-  };
-
-  function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
-  function loadLocal(){
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return false;
-    try{ Object.assign(state, JSON.parse(raw)); return true; }catch{ return false; }
-  }
-
+  // Tabs
   function setTab(name){
     document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
     $("tab-despesas").classList.toggle("hide", name!=="despesas");
     $("tab-pessoas").classList.toggle("hide", name!=="pessoas");
     $("tab-resumo").classList.toggle("hide", name!=="resumo");
+    if(name==="resumo") updateSummary();
   }
   document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>setTab(t.dataset.tab)));
 
+  // Render People
+  function renderPeople(){
+    const list = $("peopleList");
+    const empty = $("emptyPeople");
+    list.innerHTML = "";
+    if(!state.people.length){ empty.style.display="block"; }
+    else empty.style.display="none";
+
+    state.people.forEach(p=>{
+      const item = document.createElement("div");
+      item.className="card";
+      item.style.margin="10px 0";
+      item.style.boxShadow="none";
+      item.innerHTML = `
+        <div class="row">
+          <div style="flex:1.2">
+            <label>Nome</label>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
+          </div>
+          <div style="flex:.6">
+            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+    list.querySelectorAll("[data-person-name]").forEach(inp=>{
+      inp.addEventListener("input",(e)=>{
+        const id = e.target.getAttribute("data-person-name");
+        const p = state.people.find(x=>x.id===id);
+        if(!p) return;
+        p.name = e.target.value.trim() || "Sem nome";
+        save();
+        renderPayerOptions();
+        renderParticipants();
+        renderExpenses();
+        updateSummary();
+      });
+    });
+
+    list.querySelectorAll("[data-del-person]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id = btn.getAttribute("data-del-person");
+        state.people = state.people.filter(p=>p.id!==id);
+        // remove from expenses
+        state.expenses.forEach(ex=>{
+          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
+          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
+        });
+        save();
+        renderAll();
+        showToast("Pessoa removida.");
+      });
+    });
+  }
+
+  // Payer options
   function renderPayerOptions(){
     const sel = $("expPayer");
     sel.innerHTML = "";
@@ -404,96 +522,50 @@
       opt.textContent = p.name;
       sel.appendChild(opt);
     });
+    if(!sel.value) sel.value = state.people[0].id;
   }
 
-  function ensureParticipantsDraft(ex){
-    const map = new Map((ex.participants||[]).map(pp=>[pp.personId, pp]));
-    ex.participants = state.people.map(p=>{
-      const prev = map.get(p.id);
-      return { personId:p.id, included: prev ? !!prev.included : true, weight: (prev && prev.weight!=null) ? prev.weight : 1 };
-    });
+  // Participants (draft)
+  function draftParticipants(){
+    const map = new Map(state.people.map(p=>[p.id, {personId:p.id, included:true, weight:1}]));
+    // keep current toggles if exist in DOM via dataset
+    return Array.from(map.values());
   }
-
-  let draftExpense = null;
-  function getDraftExpense(){
-    const ex = draftExpense ? deepClone(draftExpense) : {
-      id: state.editingExpenseId || uid(),
-      desc: $("expDesc").value.trim(),
-      date: $("expDate").value || "",
-      payerId: $("expPayer").value || "",
-      amountCents: toCents($("expAmount").value),
-      splitType: $("splitType").value,
-      participants: []
-    };
-    ex.desc = $("expDesc").value.trim();
-    ex.date = $("expDate").value || "";
-    ex.payerId = $("expPayer").value || "";
-    ex.amountCents = toCents($("expAmount").value);
-    ex.splitType = $("splitType").value;
-    ensureParticipantsDraft(ex);
-    return ex;
-  }
-  function setDraftExpense(ex){ draftExpense = deepClone(ex); }
 
   function renderParticipants(){
     const box = $("participants");
     box.innerHTML = "";
+
     if(!state.people.length){
       box.innerHTML = `<div class="tiny">Vá em <b>Pessoas</b> e adicione quem participa.</div>`;
       return;
     }
 
-    const ex = getDraftExpense();
-    setDraftExpense(ex);
-    const split = ex.splitType;
+    const split = $("splitType").value;
 
-    ex.participants.forEach(pp=>{
-      const person = state.people.find(p=>p.id===pp.personId);
+    state.people.forEach(p=>{
       const chip = document.createElement("div");
-      chip.className = "member";
+      chip.className="member";
       chip.innerHTML = `
-        <input type="checkbox" ${pp.included ? "checked":""} data-inc="${pp.personId}"/>
-        <span>${escapeHtml(person?.name || "?")}</span>
-        ${split==="weights" ? `<input class="w" type="number" min="0" step="1" value="${pp.weight ?? 1}" data-w="${pp.personId}"/>` : ""}
+        <input type="checkbox" checked data-inc="${p.id}">
+        <span>${escapeHtml(p.name)}</span>
+        ${split==="weights" ? `<input class="w" type="number" min="0" step="1" value="1" data-w="${p.id}">` : ""}
       `;
       box.appendChild(chip);
     });
-
-    box.querySelectorAll("[data-inc]").forEach(ch=>{
-      ch.addEventListener("change", ()=>{
-        const ex2 = getDraftExpense();
-        const pid = ch.getAttribute("data-inc");
-        const pp = ex2.participants.find(x=>x.personId===pid);
-        if(pp) pp.included = ch.checked;
-        setDraftExpense(ex2);
-      });
-    });
-
-    box.querySelectorAll("[data-w]").forEach(inp=>{
-      inp.addEventListener("input", ()=>{
-        const ex2 = getDraftExpense();
-        const pid = inp.getAttribute("data-w");
-        const pp = ex2.participants.find(x=>x.personId===pid);
-        const n = Number(inp.value);
-        pp.weight = Number.isFinite(n) ? Math.max(0, Math.round(n)) : 1;
-        setDraftExpense(ex2);
-      });
-    });
   }
 
+  // Expenses
   function renderExpenses(){
     const tbody = $("expensesTbody");
     const empty = $("emptyExpenses");
     tbody.innerHTML = "";
 
-    if(!state.expenses.length){
-      empty.style.display = "block";
-      return;
-    }
-    empty.style.display = "none";
+    if(!state.expenses.length){ empty.style.display="block"; }
+    else empty.style.display="none";
 
     const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
-    const rows = deepClone(state.expenses).sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const rows = [...state.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
 
     rows.forEach(ex=>{
       const tr = document.createElement("tr");
@@ -501,158 +573,281 @@
         <td>${escapeHtml(ex.date || "—")}</td>
         <td>${escapeHtml(ex.desc || "—")}</td>
         <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
-        <td><span class="badge">${money(state.currency, ex.amountCents || 0)}</span></td>
-        <td style="text-align:right">
-          <button class="mini" type="button" data-del="${ex.id}">Excluir</button>
+        <td><span class="badge">${money(ex.amountCents||0)}</span></td>
+        <td>
+          <div class="t-actions">
+            <button class="mini" type="button" data-del="${ex.id}">Excluir</button>
+          </div>
         </td>
       `;
       tbody.appendChild(tr);
     });
 
-    tbody.querySelectorAll("[data-del]").forEach(b=>{
-      b.addEventListener("click", ()=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = b.getAttribute("data-del");
-        state.expenses = state.expenses.filter(x=>x.id!==id);
-        saveLocal();
+    tbody.querySelectorAll("[data-del]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id = btn.getAttribute("data-del");
+        state.expenses = state.expenses.filter(e=>e.id!==id);
+        save();
         renderExpenses();
-        showToast("Removido.");
+        updateSummary();
+        showToast("Despesa removida.");
       });
     });
   }
 
-  function renderPeople(){
-    const box = $("peopleList");
-    const empty = $("emptyPeople");
-    box.innerHTML = "";
-    if(!state.people.length){ empty.style.display="block"; return; }
-    empty.style.display="none";
-
-    state.people.forEach(p=>{
-      const item = document.createElement("div");
-      item.className = "card";
-      item.style.margin = "10px 0";
-      item.style.background = "rgba(255,255,255,.03)";
-      item.innerHTML = `
-        <div class="row">
-          <div style="flex:1.2">
-            <label>Nome</label>
-            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}"/>
-          </div>
-          <div style="flex:.55">
-            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
-          </div>
-        </div>
-      `;
-      box.appendChild(item);
-    });
-
-    box.querySelectorAll("[data-person-name]").forEach(inp=>{
-      inp.addEventListener("input", (e)=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = e.target.getAttribute("data-person-name");
-        const person = state.people.find(x=>x.id===id);
-        if(person){
-          person.name = e.target.value.trim() || "Sem nome";
-          saveLocal();
-          renderPayerOptions();
-          renderParticipants();
-          renderExpenses();
-        }
-      });
-    });
-
-    box.querySelectorAll("[data-del-person]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        if(state.mode==="view"){ showToast("Somente leitura."); return; }
-        const id = btn.getAttribute("data-del-person");
-        state.people = state.people.filter(p=>p.id!==id);
-        state.expenses.forEach(ex=>{
-          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
-          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
-        });
-        saveLocal();
-        renderAll();
-        showToast("Pessoa removida.");
-      });
-    });
-  }
-
+  // Validation
   function clearInvalid(){
-    $("expDesc").classList.remove("invalid");
-    $("expAmount").classList.remove("invalid");
+    ["expDesc","expAmount"].forEach(id=>$(id).classList.remove("invalid"));
     showAlert("");
   }
 
-  function validate(ex){
+  function getSelectedParticipants(){
+    const split = $("splitType").value;
+    const included = [];
+    document.querySelectorAll("#participants [data-inc]").forEach(ch=>{
+      if(ch.checked){
+        const pid = ch.getAttribute("data-inc");
+        const wInp = document.querySelector(`#participants [data-w="${pid}"]`);
+        const w = split==="weights" ? Math.max(0, Math.round(Number(wInp?.value ?? 1))) : 1;
+        included.push({personId:pid, included:true, weight:w});
+      }
+    });
+    return included;
+  }
+
+  function validateExpense(desc, amountCents, payerId, participants){
     clearInvalid();
     if(!state.people.length){
       showAlert("⚠️ Adicione pessoas primeiro (aba Pessoas).");
       return false;
     }
-    if(!ex.desc){
+    if(!desc){
       $("expDesc").classList.add("invalid");
-      showAlert("⚠️ Falta a DESCRIÇÃO DA DESPESA (ex.: Jantar).");
+      showAlert("⚠️ Coloque uma descrição (ex.: Jantar).");
       $("expDesc").focus();
       return false;
     }
-    if(!ex.date){
-      showAlert("⚠️ Falta a data.");
-      return false;
-    }
-    if(ex.amountCents==null || ex.amountCents<=0){
+    if(amountCents==null || amountCents<=0){
       $("expAmount").classList.add("invalid");
-      showAlert("⚠️ Valor inválido (use 125,00).");
+      showAlert("⚠️ Valor inválido. Use 125,00.");
       $("expAmount").focus();
       return false;
     }
-    const included = ex.participants.filter(p=>p.included);
-    if(!included.length){
+    if(!payerId){
+      showAlert("⚠️ Selecione quem pagou.");
+      return false;
+    }
+    if(!participants.length){
       showAlert("⚠️ Selecione pelo menos 1 participante.");
       return false;
     }
-    if(ex.splitType==="weights"){
-      const sumW = included.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+    if($("splitType").value==="weights"){
+      const sumW = participants.reduce((s,p)=> s + (Number(p.weight)||0), 0);
       if(sumW<=0){
-        showAlert("⚠️ Em 'pesos', some pesos > 0.");
+        showAlert("⚠️ Em 'pesos', a soma dos pesos precisa ser > 0.");
         return false;
       }
     }
     return true;
   }
 
-  // top actions
-  $("btnShare").addEventListener("click", async ()=>{
-    const payload = {groupName:state.groupName,currency:state.currency,people:state.people,expenses:state.expenses};
-    const data = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-    const params = new URLSearchParams();
-    params.set("data", data);
-    params.set("mode", "view");
-    const link = location.origin + location.pathname + "#" + params.toString();
+  // Core: balances + settlement
+  function computeBalances(){
+    const bal = new Map(state.people.map(p=>[p.id, 0]));
 
-    try{
-      await navigator.clipboard.writeText(link);
-      showToast("Link copiado!");
-    }catch{
-      prompt("Copie o link:", link);
+    state.expenses.forEach(ex=>{
+      const amount = ex.amountCents || 0;
+      // payer gets credit
+      bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
+
+      const parts = (ex.participants||[]).filter(p=>p.included);
+      if(!parts.length) return;
+
+      if(ex.splitType==="weights"){
+        const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+        if(totalW<=0) return;
+
+        // share distribution with rounding fairness
+        const shares = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
+        let base = shares.reduce((a,b)=>a+b,0);
+        let rem = amount - base;
+        for(let i=0;i<parts.length && rem>0;i++){ shares[i]+=1; rem-=1; }
+
+        parts.forEach((p,i)=>{
+          bal.set(p.personId, (bal.get(p.personId)||0) - shares[i]);
+        });
+
+      } else {
+        const n = parts.length;
+        const share = Math.floor(amount / n);
+        let rem = amount - (share*n);
+        parts.forEach(p=>{
+          const extra = rem>0 ? 1 : 0;
+          if(rem>0) rem--;
+          bal.set(p.personId, (bal.get(p.personId)||0) - (share + extra));
+        });
+      }
+    });
+
+    return bal;
+  }
+
+  function computeSettlement(bal){
+    const creditors=[], debtors=[];
+    for(const [pid,cents] of bal.entries()){
+      if(cents>0) creditors.push([pid,cents]);
+      else if(cents<0) debtors.push([pid,-cents]);
     }
-  });
+    creditors.sort((a,b)=>b[1]-a[1]);
+    debtors.sort((a,b)=>b[1]-a[1]);
 
-  $("btnExport").addEventListener("click", ()=>{
-    const payload = {groupName:state.groupName, currency:state.currency, people:state.people, expenses:state.expenses};
+    const transfers=[];
+    let i=0,j=0;
+    while(i<debtors.length && j<creditors.length){
+      const x = Math.min(debtors[i][1], creditors[j][1]);
+      transfers.push({from:debtors[i][0], to:creditors[j][0], amount:x});
+      debtors[i][1]-=x; creditors[j][1]-=x;
+      if(debtors[i][1]===0) i++;
+      if(creditors[j][1]===0) j++;
+    }
+    return transfers;
+  }
+
+  function updateSummary(){
+    const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
+    const n = state.people.length || 0;
+    $("kpiTotal").textContent = n ? money(total) : "—";
+    $("kpiN").textContent = String(n || "—");
+    $("kpiEach").textContent = (n && total) ? money(Math.round(total/n)) : (n ? money(0) : "—");
+
+    const balancesDiv = $("balances");
+    const settlementDiv = $("settlement");
+    const shareTextEl = $("shareText");
+    balancesDiv.innerHTML = "";
+    settlementDiv.innerHTML = "";
+    shareTextEl.value = "";
+
+    if(!state.people.length){
+      balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas para ver o resumo.</div>`;
+      settlementDiv.innerHTML = `<div class="tiny">Sem pessoas ainda.</div>`;
+      shareTextEl.value = makeFunnyMessage([], [], total, n);
+      return;
+    }
+
+    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
+    const bal = computeBalances();
+    const items = state.people
+      .map(p=>({id:p.id, name:p.name, v:(bal.get(p.id)||0)}))
+      .sort((a,b)=>b.v-a.v);
+
+    // balances table
+    const t = document.createElement("table");
+    t.innerHTML = `
+      <thead><tr><th>Pessoa</th><th>Saldo</th><th>Status</th></tr></thead>
+      <tbody>
+        ${items.map(it=>{
+          const cls = it.v>0 ? "badge pos" : (it.v<0 ? "badge neg" : "badge");
+          const status = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
+          return `<tr>
+            <td>${escapeHtml(it.name)}</td>
+            <td><span class="${cls}">${money(it.v)}</span></td>
+            <td class="tiny">${status}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    `;
+    balancesDiv.appendChild(t);
+
+    // settlement
+    const transfers = computeSettlement(bal);
+    if(!transfers.length){
+      settlementDiv.innerHTML = `<div class="tiny">Tudo certo: ninguém deve nada (milagre moderno).</div>`;
+    } else {
+      const box = document.createElement("div");
+      box.className="card";
+      box.style.boxShadow="none";
+      box.style.margin="0";
+      box.innerHTML = transfers.map(tr=>{
+        return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
+          <b>${escapeHtml(peopleMap.get(tr.from) || "?")}</b> paga <b>${escapeHtml(peopleMap.get(tr.to) || "?")}</b>
+          <span class="badge" style="margin-left:8px">${money(tr.amount)}</span>
+        </div>`;
+      }).join("");
+      settlementDiv.appendChild(box);
+    }
+
+    // share text (funny + clear)
+    shareTextEl.value = makeFunnyMessage(items, transfers, total, n);
+  }
+
+  function makeFunnyMessage(balItems, transfers, total, n){
+    const group = (state.groupName || "Racha").trim();
+    const cur = state.currency;
+
+    const lines = [];
+    lines.push(`💸 *${group}* — Resumo do Racha`);
+    lines.push(`🧾 Total: ${money(total)} | 👥 Pessoas: ${n}`);
+    if(n>0) lines.push(`🧮 Média por pessoa (igual): ${money(Math.round(total/n))}`);
+    lines.push("");
+
+    if(!n){
+      lines.push("Adiciona a galera primeiro senão nem o Excel salva 😅");
+      return lines.join("\n");
+    }
+
+    lines.push("📊 *Saldos (quem recebe / quem paga)*");
+    const top = balItems.slice(0, Math.min(8, balItems.length));
+    top.forEach(it=>{
+      const tag = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
+      const emoji = it.v>0 ? "🟢" : (it.v<0 ? "🔴" : "⚪");
+      lines.push(`${emoji} ${it.name}: ${money(it.v)} (${tag})`);
+    });
+    if(balItems.length>8) lines.push(`… e mais ${balItems.length-8} pessoa(s)`);
+
+    lines.push("");
+    lines.push("🔁 *Quem paga pra quem (pra ninguém chorar no final)*");
+
+    if(!transfers.length){
+      lines.push("🎉 Ninguém deve nada. A paz reina (por enquanto).");
+    } else {
+      transfers.forEach(t=>{
+        lines.push(`➡️ ${nameById(t.from)} paga ${money(t.amount)} para ${nameById(t.to)}`);
+      });
+    }
+
+    lines.push("");
+    lines.push("🪙 Regra de ouro: pagou? marca aqui. não marcou? não aconteceu 😌");
+    lines.push("📎 Se quiser auditar, pede o JSON (sem drama).");
+    return lines.join("\n");
+
+    function nameById(id){
+      const p = state.people.find(x=>x.id===id);
+      return p ? p.name : "?";
+    }
+  }
+
+  // Copy helpers
+  async function copy(text){
+    try{ await navigator.clipboard.writeText(text); showToast("Copiado ✅"); }
+    catch{ prompt("Copie:", text); }
+  }
+
+  // Export/Import
+  function exportJson(){
+    const payload = { groupName: state.groupName, currency: state.currency, people: state.people, expenses: state.expenses };
     const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = ("racha_" + (state.groupName||"grupo").replace(/\s+/g,"_") + ".json");
     a.click();
     URL.revokeObjectURL(a.href);
-    showToast("Exportado.");
-  });
+    showToast("JSON baixado.");
+  }
 
-  $("btnImport").addEventListener("click", ()=>{
+  function importJson(){
     const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "application/json";
+    input.type="file";
+    input.accept="application/json";
     input.onchange = async ()=>{
       const file = input.files && input.files[0];
       if(!file) return;
@@ -663,126 +858,118 @@
         state.currency  = obj.currency ?? state.currency;
         state.people    = Array.isArray(obj.people) ? obj.people : [];
         state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
-        state.mode = "edit";
-        saveLocal();
+        save();
         renderAll();
-        showToast("Importado.");
+        showToast("Importado ✅");
       }catch{
-        showToast("Arquivo inválido.");
+        showToast("JSON inválido.");
       }
     };
     input.click();
-  });
+  }
 
-  $("btnReset").addEventListener("click", ()=>{
-    if(!confirm("Resetar tudo?")) return;
-    localStorage.removeItem(LS_KEY);
-    location.hash = "";
-    location.reload();
-  });
+  // Events
+  $("groupName").addEventListener("input", ()=>{ state.groupName = $("groupName").value.trim()||"Racha"; save(); updateSummary(); });
+  $("currency").addEventListener("change", ()=>{ state.currency = $("currency").value; save(); renderExpenses(); updateSummary(); });
 
-  $("mode").addEventListener("change", ()=>{
-    state.mode = $("mode").value;
-    saveLocal();
-    renderAll();
-    showToast(state.mode==="view" ? "Somente leitura." : "Editável.");
-  });
-
-  $("groupName").addEventListener("input", ()=>{
-    state.groupName = $("groupName").value.trim() || "Meu grupo";
-    saveLocal();
-  });
-  $("currency").addEventListener("change", ()=>{
-    state.currency = $("currency").value;
-    saveLocal();
-    renderAll();
-  });
-
-  $("splitType").addEventListener("change", renderParticipants);
-  $("expDesc").addEventListener("input", clearInvalid);
-  $("expAmount").addEventListener("input", clearInvalid);
-
-  $("btnClearExp").addEventListener("click", ()=>{
-    $("expDesc").value = "";
-    $("expAmount").value = "";
-    $("splitType").value = "equal";
-    $("expDate").value = today();
-    clearInvalid();
-    renderParticipants();
-    showToast("Limpo.");
-  });
-
-  $("btnSaveExp").addEventListener("click", ()=>{
-    if(state.mode==="view"){ showToast("Somente leitura."); return; }
-
-    const ex = getDraftExpense();
-    if(!validate(ex)) return;
-
-    state.expenses.push({
-      id: uid(),
-      desc: ex.desc,
-      date: ex.date,
-      payerId: ex.payerId || state.people[0]?.id || "",
-      amountCents: ex.amountCents,
-      splitType: ex.splitType,
-      participants: ex.participants
-    });
-
-    saveLocal();
-    renderExpenses();
-    showToast("SALVO ✅");
-  });
-
+  $("splitType").addEventListener("change", ()=>renderParticipants());
   $("btnAddPerson").addEventListener("click", ()=>{
-    if(state.mode==="view"){ showToast("Somente leitura."); return; }
     const name = $("personName").value.trim();
     if(!name) return showToast("Digite um nome.");
-    const id = uid();
-    state.people.push({id, name});
-    $("personName").value = "";
-    saveLocal();
+    state.people.push({id:uid(), name});
+    $("personName").value="";
+    save();
     renderAll();
     showToast("Pessoa adicionada.");
   });
 
-  function applyModeLock(){
-    const lock = state.mode === "view";
-    ["groupName","currency","expDesc","expDate","expPayer","expAmount","splitType","personName"].forEach(id=>$(id).disabled = lock);
-    ["btnAddPerson","btnSaveExp","btnClearExp"].forEach(id=>$(id).disabled = lock);
-    document.querySelectorAll("[data-inc],[data-w]").forEach(el=>el.disabled = lock);
-  }
+  $("btnClearExp").addEventListener("click", ()=>{
+    $("expDesc").value="";
+    $("expAmount").value="";
+    $("splitType").value="equal";
+    $("expDate").value=today();
+    showAlert("");
+    ["expDesc","expAmount"].forEach(id=>$(id).classList.remove("invalid"));
+    renderParticipants();
+  });
+
+  $("btnAddExpense").addEventListener("click", ()=>{
+    const desc = $("expDesc").value.trim();
+    const date = $("expDate").value || today();
+    const payerId = $("expPayer").value || "";
+    const amountCents = toCents($("expAmount").value);
+    const splitType = $("splitType").value;
+    const participants = getSelectedParticipants();
+
+    $("expDesc").classList.remove("invalid");
+    $("expAmount").classList.remove("invalid");
+
+    if(!validateExpense(desc, amountCents, payerId, participants)){
+      if(!desc) $("expDesc").classList.add("invalid");
+      if(amountCents==null || amountCents<=0) $("expAmount").classList.add("invalid");
+      return;
+    }
+
+    state.expenses.push({
+      id:uid(),
+      desc, date, payerId,
+      amountCents,
+      splitType,
+      participants
+    });
+
+    save();
+    renderExpenses();
+    updateSummary();
+    showToast("Despesa adicionada ✅");
+
+    // mantém descrição e valor como calculadora? (você pode preferir limpar)
+    $("expDesc").value="";
+    $("expAmount").value="";
+    showAlert("");
+  });
+
+  $("btnCopyFunny").addEventListener("click", ()=>{ setTab("resumo"); copy($("shareText").value || ""); });
+  $("btnCopyFunny2").addEventListener("click", ()=>copy($("shareText").value || ""));
+  $("btnCopyText").addEventListener("click", ()=>copy($("shareText").value || ""));
+
+  $("btnExport").addEventListener("click", exportJson);
+  $("btnDownloadJson2").addEventListener("click", exportJson);
+  $("btnImport").addEventListener("click", importJson);
+
+  $("btnReset").addEventListener("click", ()=>{
+    if(!confirm("Resetar tudo (pessoas + despesas)?")) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  });
 
   function renderAll(){
-    $("groupName").value = state.groupName || "Meu grupo";
-    $("currency").value = state.currency || "R$";
-    $("mode").value = state.mode || "edit";
+    $("groupName").value = state.groupName || "Racha";
+    $("currency").value = state.currency || "€";
     if(!$("expDate").value) $("expDate").value = today();
 
     renderPeople();
     renderPayerOptions();
-    if(state.people.length && !$("expPayer").value) $("expPayer").value = state.people[0].id;
-
     renderParticipants();
     renderExpenses();
-    applyModeLock();
+    updateSummary();
   }
 
-  // init
-  loadLocal();
+  // Init
+  load();
 
-  // demo (se vazio)
   if(!state.people.length){
+    // demo leve
     state.groupName = "Exemplo";
-    state.currency = "R$";
+    state.currency = "€";
     state.people = [
-      {id: uid(), name:"Ernandes"},
-      {id: uid(), name:"Claumir"},
-      {id: uid(), name:"Áurea"},
-      {id: uid(), name:"Ana Paula"},
+      {id:uid(), name:"Ernandes"},
+      {id:uid(), name:"Claumir"},
+      {id:uid(), name:"Áurea"},
+      {id:uid(), name:"Ana Paula"},
     ];
-    saveLocal();
+    save();
   }
-
   $("expDate").value = today();
   renderAll();
 })();
