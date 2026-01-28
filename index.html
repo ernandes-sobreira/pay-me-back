@@ -192,7 +192,7 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Racha — Divisão de Contas</h1>
-        <div class="sub">Participantes por despesa • PIX/conta por pessoa • Exporta/Importa JSON</div>
+        <div class="sub">Participantes por despesa • PIX/conta por pessoa • Modo “por despesa” disponível</div>
       </div>
     </div>
     <div class="actions">
@@ -261,7 +261,15 @@
         </div>
 
         <div style="margin-top:10px">
-          <label>Participantes desta despesa</label>
+          <div class="row" style="align-items:center">
+            <div>
+              <label>Participantes desta despesa</label>
+            </div>
+            <div style="flex:.5;display:flex;justify-content:flex-end">
+              <button class="mini" type="button" id="btnMarkAll">Marcar todos</button>
+            </div>
+          </div>
+
           <div class="members" id="participants"></div>
           <div class="tiny" style="margin-top:8px">
             O cálculo é <b>por despesa</b>, usando apenas os participantes marcados.
@@ -321,21 +329,31 @@
           <div class="kpi"><div class="v" id="kpiE">—</div><div class="l">Despesas</div></div>
         </div>
 
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label>Modo de liquidação</label>
+            <select id="settleMode">
+              <option value="perExpense">Por despesa (cada um paga o pagador da despesa)</option>
+              <option value="net">Compensar tudo (mínimas transferências)</option>
+            </select>
+          </div>
+        </div>
+
         <div class="hr"></div>
 
-        <h3 style="margin:0 0 8px 0;font-size:14px">Saldos</h3>
+        <h3 style="margin:0 0 8px 0;font-size:14px">Saldos (resultado final)</h3>
         <div id="balances"></div>
 
         <div class="hr"></div>
 
         <h3 style="margin:0 0 8px 0;font-size:14px">Quem paga pra quem</h3>
-        <div class="tiny" style="margin-bottom:8px">Transferências mínimas para zerar tudo.</div>
+        <div class="tiny" style="margin-bottom:8px">No modo “por despesa”, quem participou sempre paga o pagador daquela despesa.</div>
         <div id="settlement"></div>
 
         <div class="hr"></div>
 
         <label>Resumo para compartilhar</label>
-        <textarea id="shareText" class="mono" style="min-height:200px"></textarea>
+        <textarea id="shareText" class="mono" style="min-height:220px"></textarea>
 
         <div class="row" style="margin-top:10px">
           <button class="btn primary" id="btnCopyText" type="button">Copiar resumo</button>
@@ -347,15 +365,13 @@
     <!-- RIGHT -->
     <div class="card">
       <div class="tiny">
-        <b>Como funciona o cálculo (correto):</b><br/>
-        • Cada despesa é rateada <b>somente</b> entre os participantes marcados.<br/>
-        • Quem pagou recebe o excedente acima da sua cota naquela despesa.<br/>
-        • O resumo soma tudo e gera “quem paga pra quem” para zerar os saldos.
+        <b>Regra do app:</b><br/>
+        • Cada despesa é rateada apenas entre os participantes marcados.<br/>
+        • Modo “Por despesa” mostra pagamentos diretos a cada pagador.<br/>
+        • Modo “Compensar” reduz o número de transferências.
       </div>
       <div class="hr"></div>
-      <div class="tiny">
-        <b>Transparência:</b> ao baixar o JSON, qualquer pessoa pode importar e conferir os gastos.
-      </div>
+      <div class="tiny"><b>Dica:</b> se alguém participou e não aparece pagando, confira se ele estava marcado naquela despesa.</div>
     </div>
   </div>
 </div>
@@ -364,7 +380,7 @@
 
 <script>
 (function(){
-  const LS_KEY = "racha_clear_pix_v1";
+  const LS_KEY = "racha_clear_pix_v2";
   const $ = (id)=>document.getElementById(id);
   const toastEl = $("toast");
   const alertEl = $("alert");
@@ -372,8 +388,9 @@
   const state = {
     groupName:"Grupo",
     currency:"R$",
-    people:[],      // {id,name,pay}
-    expenses:[]     // {id,desc,date,payerId,amountCents,splitType,participants:[{personId,included,weight}]}
+    settleMode:"perExpense",
+    people:[],
+    expenses:[]
   };
 
   function showToast(msg){
@@ -388,7 +405,10 @@
   function today(){ return new Date().toISOString().slice(0,10); }
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 
-  function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  function save(){
+    if($("settleMode")) state.settleMode = $("settleMode").value;
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+  }
   function load(){
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return false;
@@ -469,6 +489,10 @@
       `;
       box.appendChild(chip);
     });
+  }
+
+  function markAllParticipants(){
+    document.querySelectorAll("#participants [data-inc]").forEach(ch=>ch.checked=true);
   }
 
   function getSelectedParticipants(){
@@ -577,16 +601,16 @@
         <td><span class="badge">${money(ex.amountCents||0)}</span></td>
         <td>
           <div class="t-actions">
-            <button class="mini" type="button" data-del="${ex.id}">Excluir</button>
+            <button class="mini" type="button" data-del-exp="${ex.id}">Excluir</button>
           </div>
         </td>
       `;
       tbody.appendChild(tr);
     });
 
-    tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    tbody.querySelectorAll("[data-del-exp]").forEach(btn=>{
       btn.addEventListener("click",()=>{
-        const id = btn.getAttribute("data-del");
+        const id = btn.getAttribute("data-del-exp");
         state.expenses = state.expenses.filter(e=>e.id!==id);
         save();
         renderExpenses();
@@ -638,49 +662,84 @@
     return true;
   }
 
-  // Core: balances (by expense participants) + settlement
+  // Helpers: shares for one expense (Map personId -> cents)
+  function computeSharesForExpense(ex){
+    const amount = ex.amountCents || 0;
+    const parts = (ex.participants||[]).filter(p=>p.included);
+    const shares = new Map();
+    if(!parts.length || amount<=0) return shares;
+
+    if(ex.splitType==="weights"){
+      const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+      if(totalW<=0) return shares;
+
+      const raw = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
+      let base = raw.reduce((a,b)=>a+b,0);
+      let rem = amount - base;
+      for(let i=0;i<parts.length && rem>0;i++){ raw[i]+=1; rem-=1; }
+      parts.forEach((p,i)=> shares.set(p.personId, raw[i]));
+      return shares;
+    }
+
+    // equal
+    const n = parts.length;
+    const share = Math.floor(amount / n);
+    let rem = amount - (share*n);
+    parts.forEach(p=>{
+      const extra = rem>0 ? 1 : 0;
+      if(rem>0) rem--;
+      shares.set(p.personId, share + extra);
+    });
+    return shares;
+  }
+
+  // Core: balances (final result) always computed as net balances
   function computeBalances(){
     const bal = new Map(state.people.map(p=>[p.id, 0]));
-
     state.expenses.forEach(ex=>{
       const amount = ex.amountCents || 0;
-
-      // crédito do pagador
+      // credit payer
       bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
-
-      const parts = (ex.participants||[]).filter(p=>p.included);
-      if(!parts.length) return;
-
-      if(ex.splitType==="weights"){
-        const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-        if(totalW<=0) return;
-
-        // distribuição com arredondamento
-        const shares = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
-        let base = shares.reduce((a,b)=>a+b,0);
-        let rem = amount - base;
-        for(let i=0;i<parts.length && rem>0;i++){ shares[i]+=1; rem-=1; }
-
-        parts.forEach((p,i)=>{
-          bal.set(p.personId, (bal.get(p.personId)||0) - shares[i]);
-        });
-      } else {
-        // igual entre os participantes marcados
-        const n = parts.length;
-        const share = Math.floor(amount / n);
-        let rem = amount - (share*n);
-        parts.forEach(p=>{
-          const extra = rem>0 ? 1 : 0;
-          if(rem>0) rem--;
-          bal.set(p.personId, (bal.get(p.personId)||0) - (share + extra));
-        });
+      // debit participants by their share for this expense
+      const shares = computeSharesForExpense(ex);
+      for(const [pid, cents] of shares.entries()){
+        bal.set(pid, (bal.get(pid)||0) - cents);
       }
     });
-
     return bal;
   }
 
+  // Settlement: two modes
   function computeSettlement(bal){
+    const mode = state.settleMode || "perExpense";
+
+    // Mode A: per expense (each participant pays the payer of that expense)
+    if(mode === "perExpense"){
+      const pair = new Map(); // "from|to" -> cents
+
+      for(const ex of state.expenses){
+        const payer = ex.payerId;
+        if(!payer) continue;
+
+        const shares = computeSharesForExpense(ex);
+        for(const [pid, cents] of shares.entries()){
+          if(pid === payer) continue;
+          const key = pid + "|" + payer;
+          pair.set(key, (pair.get(key)||0) + cents);
+        }
+      }
+
+      const transfers = [];
+      for(const [key, cents] of pair.entries()){
+        if(cents<=0) continue;
+        const [from,to] = key.split("|");
+        transfers.push({from,to,amount:cents});
+      }
+      transfers.sort((a,b)=>b.amount-a.amount);
+      return transfers;
+    }
+
+    // Mode B: netting (minimum transfers)
     const creditors=[], debtors=[];
     for(const [pid,cents] of bal.entries()){
       if(cents>0) creditors.push([pid,cents]);
@@ -703,7 +762,7 @@
 
   function updateSummary(){
     const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
-    $("kpiTotal").textContent = state.expenses.length ? money(total) : money(0);
+    $("kpiTotal").textContent = money(total);
     $("kpiN").textContent = String(state.people.length);
     $("kpiE").textContent = String(state.expenses.length);
 
@@ -714,7 +773,6 @@
     settlementDiv.innerHTML = "";
     shareTextEl.value = "";
 
-    const peopleMap = new Map(state.people.map(p=>[p.id,p]));
     if(!state.people.length){
       balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas para ver o resumo.</div>`;
       settlementDiv.innerHTML = `<div class="tiny">Sem pessoas ainda.</div>`;
@@ -722,6 +780,7 @@
       return;
     }
 
+    const peopleMap = new Map(state.people.map(p=>[p.id,p]));
     const bal = computeBalances();
     const items = state.people
       .map(p=>({id:p.id, name:p.name, v:(bal.get(p.id)||0)}))
@@ -755,9 +814,10 @@
       box.style.margin="0";
       box.innerHTML = transfers.map(tr=>{
         const from = peopleMap.get(tr.from)?.name || "?";
-        const to = peopleMap.get(tr.to)?.name || "?";
+        const toObj = peopleMap.get(tr.to);
+        const toName = toObj?.name || "?";
         return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
-          <b>${escapeHtml(from)}</b> paga <b>${escapeHtml(to)}</b>
+          <b>${escapeHtml(from)}</b> paga <b>${escapeHtml(toName)}</b>
           <span class="badge" style="margin-left:8px">${money(tr.amount)}</span>
         </div>`;
       }).join("");
@@ -768,13 +828,14 @@
   }
 
   function makeShareText(balItems, transfers, total){
-    const group = (state.groupName || "Racha").trim();
+    const group = (state.groupName || "Grupo").trim();
     const lines = [];
     lines.push(`RACHA — ${group}`);
     lines.push(`Total: ${money(total)} | Pessoas: ${state.people.length} | Despesas: ${state.expenses.length}`);
+    lines.push(`Modo de liquidação: ${state.settleMode === "perExpense" ? "Por despesa" : "Compensado"}`);
     lines.push("");
 
-    lines.push("Saldos:");
+    lines.push("Saldos (resultado final):");
     balItems.forEach(it=>{
       const tag = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
       lines.push(`- ${it.name}: ${money(it.v)} (${tag})`);
@@ -794,10 +855,12 @@
     }
 
     // Dados de pagamento: somente quem vai receber (saldo positivo)
-    const receivers = balItems.filter(x=>x.v>0).map(x=>{
-      const p = state.people.find(pp=>pp.id===x.id);
-      return {name:x.name, pay:(p?.pay||"").trim(), amount:x.v};
-    });
+    const receivers = balItems
+      .filter(x=>x.v>0)
+      .map(x=>{
+        const p = state.people.find(pp=>pp.id===x.id);
+        return {name:x.name, pay:(p?.pay||"").trim()};
+      });
 
     lines.push("");
     lines.push("Dados para pagamento (recebedores):");
@@ -805,8 +868,7 @@
       lines.push("- (ninguém recebe)");
     } else {
       receivers.forEach(r=>{
-        const payLine = r.pay ? r.pay : "(sem PIX/conta informado)";
-        lines.push(`- ${r.name} — ${payLine}`);
+        lines.push(`- ${r.name}: ${r.pay ? r.pay : "(sem PIX/conta informado)"}`);
       });
     }
 
@@ -823,7 +885,13 @@
   }
 
   function exportJson(){
-    const payload = { groupName: state.groupName, currency: state.currency, people: state.people, expenses: state.expenses };
+    const payload = {
+      groupName: state.groupName,
+      currency: state.currency,
+      settleMode: state.settleMode,
+      people: state.people,
+      expenses: state.expenses
+    };
     const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -845,6 +913,7 @@
         const obj = JSON.parse(txt);
         state.groupName = obj.groupName ?? state.groupName;
         state.currency  = obj.currency ?? state.currency;
+        state.settleMode = obj.settleMode ?? state.settleMode;
         state.people    = Array.isArray(obj.people) ? obj.people : [];
         state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
         save();
@@ -862,6 +931,9 @@
   $("currency").addEventListener("change", ()=>{ state.currency = $("currency").value; save(); renderExpenses(); updateSummary(); });
 
   $("splitType").addEventListener("change", ()=>renderParticipants());
+  $("btnMarkAll").addEventListener("click", ()=>{ markAllParticipants(); showToast("Todos marcados."); });
+
+  $("settleMode").addEventListener("change", ()=>{ save(); updateSummary(); });
 
   $("btnAddPerson").addEventListener("click", ()=>{
     const name = $("personName").value.trim();
@@ -924,50 +996,81 @@
     location.reload();
   });
 
-  // Expenses table delete
-  function hookExpenseDeletes(){
-    document.querySelectorAll("[data-del-exp]").forEach(btn=>{
+  function renderPeople(){
+    const list = $("peopleList");
+    const empty = $("emptyPeople");
+    list.innerHTML = "";
+    if(!state.people.length){ empty.style.display="block"; }
+    else empty.style.display="none";
+
+    state.people.forEach(p=>{
+      const item = document.createElement("div");
+      item.className="card";
+      item.style.margin="10px 0";
+      item.style.boxShadow="none";
+      item.innerHTML = `
+        <div class="row">
+          <div>
+            <label>Nome</label>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
+          </div>
+          <div>
+            <label>PIX / Conta / IBAN</label>
+            <input value="${escapeHtml(p.pay || "")}" data-person-pay="${p.id}" autocomplete="off"
+                   placeholder="Opcional — aparece no resumo"/>
+          </div>
+          <div style="flex:.55">
+            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+    list.querySelectorAll("[data-person-name]").forEach(inp=>{
+      inp.addEventListener("input",(e)=>{
+        const id = e.target.getAttribute("data-person-name");
+        const p = state.people.find(x=>x.id===id);
+        if(!p) return;
+        p.name = e.target.value.trim() || "Sem nome";
+        save();
+        renderPayerOptions();
+        renderParticipants();
+        renderExpenses();
+        updateSummary();
+      });
+    });
+
+    list.querySelectorAll("[data-person-pay]").forEach(inp=>{
+      inp.addEventListener("input",(e)=>{
+        const id = e.target.getAttribute("data-person-pay");
+        const p = state.people.find(x=>x.id===id);
+        if(!p) return;
+        p.pay = e.target.value.trim();
+        save();
+        updateSummary();
+      });
+    });
+
+    list.querySelectorAll("[data-del-person]").forEach(btn=>{
       btn.addEventListener("click",()=>{
-        const id = btn.getAttribute("data-del-exp");
-        state.expenses = state.expenses.filter(e=>e.id!==id);
-        save(); renderExpenses(); updateSummary();
+        const id = btn.getAttribute("data-del-person");
+        state.people = state.people.filter(p=>p.id!==id);
+        state.expenses.forEach(ex=>{
+          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
+          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
+        });
+        save();
+        renderAll();
+        showToast("Pessoa removida.");
       });
     });
   }
 
-  // Override renderExpenses to wire delete buttons
-  const _renderExpenses = renderExpenses;
-  renderExpenses = function(){
-    const tbody = $("expensesTbody");
-    const empty = $("emptyExpenses");
-    tbody.innerHTML = "";
-    if(!state.expenses.length){ empty.style.display="block"; }
-    else empty.style.display="none";
-
-    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
-    const rows = [...state.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-
-    rows.forEach(ex=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${escapeHtml(ex.date || "—")}</td>
-        <td>${escapeHtml(ex.desc || "—")}</td>
-        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
-        <td><span class="badge">${money(ex.amountCents||0)}</span></td>
-        <td>
-          <div class="t-actions">
-            <button class="mini" type="button" data-del-exp="${ex.id}">Excluir</button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-    hookExpenseDeletes();
-  };
-
   function renderAll(){
     $("groupName").value = state.groupName || "Grupo";
     $("currency").value = state.currency || "R$";
+    $("settleMode").value = state.settleMode || "perExpense";
     if(!$("expDate").value) $("expDate").value = today();
 
     renderPeople();
@@ -977,11 +1080,12 @@
     updateSummary();
   }
 
-  // Init
+  // init
   load();
   if(!state.people.length){
     state.groupName = "Exemplo";
     state.currency = "R$";
+    state.settleMode = "perExpense";
     state.people = [
       {id:uid(), name:"Claúmir", pay:""},
       {id:uid(), name:"Ernandes", pay:""},
