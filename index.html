@@ -4,38 +4,48 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Racha — Divisão de Contas</title>
-  <meta name="theme-color" content="#0f2a1f"/>
+  <meta name="theme-color" content="#0b1020"/>
   <style>
     :root{
-      --bg:#f6f7f8;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e5e7eb;
-      --shadow:0 10px 24px rgba(2,6,23,.08);
+      /* Vibrante + alto contraste */
+      --bg:#0b1020;
+      --card:#101a33;
+      --card2:#0f1730;
+      --text:#f8fafc;
+      --muted:#b6c2d1;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 16px 40px rgba(0,0,0,.35);
       --r:18px;
 
-      --moss:#0f2a1f;
-      --moss2:#1f513c;
-      --gold:#c6a44b;
-      --ok:#16a34a;
-      --bad:#ef4444;
+      --blue:#3b82f6;
+      --green:#22c55e;
+      --yellow:#fbbf24;
+      --orange:#fb923c;
+      --red:#ef4444;
+      --pink:#ec4899;
+      --violet:#a855f7;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1200px 600px at 10% 0%, rgba(59,130,246,.18), transparent 60%),
+                                          radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.16), transparent 60%),
+                                          radial-gradient(900px 500px at 70% 90%, rgba(251,191,36,.12), transparent 60%),
+                                          var(--bg);
+         color:var(--text)}
     .wrap{max-width:1100px;margin:0 auto;padding:14px 12px 32px}
 
     header{
       display:flex;gap:12px;align-items:center;justify-content:space-between;
       padding:12px;border:1px solid var(--line);border-radius:var(--r);
-      background:#fff;box-shadow:var(--shadow);
+      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
       position:sticky;top:10px;z-index:20;
+      backdrop-filter: blur(8px);
     }
     .brand{display:flex;gap:12px;align-items:center}
     .logo{
       width:42px;height:42px;border-radius:14px;
-      background:conic-gradient(from 230deg, var(--moss2), var(--gold), var(--moss), var(--gold), var(--moss2));
-      box-shadow:0 10px 18px rgba(2,6,23,.12);
+      background:conic-gradient(from 230deg, var(--blue), var(--yellow), var(--green), var(--orange), var(--red), var(--violet), var(--blue));
+      box-shadow:0 14px 28px rgba(0,0,0,.35);
     }
     h1{font-size:16px;margin:0}
     .sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -43,52 +53,55 @@
 
     .btn{
       border:1px solid var(--line);
-      background:#fff;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
       padding:10px 12px;
       border-radius:14px;
-      font-weight:900;
+      font-weight:1000;
       cursor:pointer;
-      box-shadow:0 8px 14px rgba(2,6,23,.06);
+      box-shadow:0 10px 18px rgba(0,0,0,.22);
     }
+    .btn:hover{filter:brightness(1.05)}
     .btn.primary{
-      background:linear-gradient(135deg, rgba(31,81,60,.10), rgba(198,164,75,.16));
-      border-color:rgba(31,81,60,.25);
+      border-color:rgba(59,130,246,.35);
+      background:linear-gradient(135deg, rgba(59,130,246,.25), rgba(34,197,94,.18));
     }
     .btn.good{
-      background:linear-gradient(135deg, rgba(22,163,74,.10), rgba(31,81,60,.10));
-      border-color:rgba(22,163,74,.25);
+      border-color:rgba(34,197,94,.35);
+      background:linear-gradient(135deg, rgba(34,197,94,.22), rgba(251,191,36,.16));
     }
     .btn.bad{
-      background:linear-gradient(135deg, rgba(239,68,68,.10), rgba(198,164,75,.10));
-      border-color:rgba(239,68,68,.25);
+      border-color:rgba(239,68,68,.40);
+      background:linear-gradient(135deg, rgba(239,68,68,.22), rgba(251,146,60,.14));
     }
 
     .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
     @media (max-width:940px){.grid{grid-template-columns:1fr}}
 
     .card{
-      background:var(--card);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--line);
       border-radius:var(--r);
       box-shadow:var(--shadow);
       padding:14px;
+      backdrop-filter: blur(8px);
     }
 
     .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
     .tab{
       border:1px solid var(--line);
-      background:#fff;
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
       padding:9px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:1000;
+      font-weight:1100;
       font-size:12px;
-      color:var(--muted);
     }
     .tab.active{
       color:var(--text);
-      border-color:rgba(31,81,60,.30);
-      background:linear-gradient(135deg, rgba(31,81,60,.08), rgba(198,164,75,.10));
+      border-color:rgba(251,191,36,.45);
+      background:linear-gradient(135deg, rgba(251,191,36,.18), rgba(59,130,246,.14));
     }
     .hide{display:none}
 
@@ -98,12 +111,13 @@
       border:1px solid var(--line);
       border-radius:14px;
       padding:11px 12px;
-      background:#fff;
+      background:rgba(15,23,48,.55);
       color:var(--text);
       outline:none;
     }
     input::placeholder, textarea::placeholder{color:#94a3b8}
     input[type="date"]{padding:10px 12px}
+    select option{color:#111827}
 
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
     .row > *{flex:1}
@@ -116,28 +130,29 @@
       border:1px solid var(--line);
       border-radius:16px;
       padding:10px;
-      background:#fff;
+      background:rgba(255,255,255,.04);
     }
     .member{
       display:flex;align-items:center;gap:8px;
       border:1px solid var(--line);
       border-radius:999px;
       padding:8px 10px;
-      background:#fff;
+      background:rgba(255,255,255,.05);
       font-size:12px;
     }
-    .member input[type="checkbox"]{width:16px;height:16px}
-    .member .w{width:66px;padding:6px 8px;border-radius:12px;font-weight:1000}
+    .member input[type="checkbox"]{width:16px;height:16px;accent-color: var(--yellow);}
+    .member .w{width:66px;padding:6px 8px;border-radius:12px;font-weight:1000;background:rgba(255,255,255,.08)}
 
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;font-size:13px;vertical-align:top}
-    th{color:var(--muted);font-size:12px;font-weight:1000}
+    th{color:var(--muted);font-size:12px;font-weight:1100}
     .t-actions{display:flex;gap:8px;justify-content:flex-end}
     .mini{
       border:1px solid var(--line);
-      background:#fff;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
       padding:7px 10px;border-radius:12px;
-      font-size:12px;font-weight:1000;
+      font-size:12px;font-weight:1100;
       cursor:pointer;
     }
 
@@ -147,39 +162,42 @@
       border:1px solid var(--line);
       border-radius:16px;
       padding:12px;
-      background:#fff;
+      background:rgba(255,255,255,.05);
     }
-    .kpi .v{font-size:18px;font-weight:1100}
+    .kpi .v{font-size:18px;font-weight:1200}
     .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
 
     .badge{
       display:inline-flex;align-items:center;
       padding:4px 8px;border-radius:999px;
-      font-size:12px;font-weight:1000;
-      border:1px solid rgba(31,81,60,.22);
-      background:rgba(31,81,60,.06);
+      font-size:12px;font-weight:1200;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
     }
-    .pos{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.08)}
-    .neg{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+    .pos{border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.16)}
+    .neg{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.16)}
 
     .alert{
-      border:1px solid rgba(239,68,68,.25);
-      background:rgba(239,68,68,.07);
+      border:1px solid rgba(239,68,68,.45);
+      background:rgba(239,68,68,.14);
       border-radius:14px;
       padding:10px 12px;
       font-size:12px;
-      font-weight:1000;
+      font-weight:1100;
       display:none;
     }
-    .invalid{border-color:rgba(239,68,68,.55)!important; box-shadow:0 0 0 3px rgba(239,68,68,.12)}
+    .invalid{border-color:rgba(239,68,68,.75)!important; box-shadow:0 0 0 3px rgba(239,68,68,.18)}
     .toast{
       position:fixed;left:50%;transform:translateX(-50%);
       bottom:14px;z-index:80;
-      background:#fff;border:1px solid var(--line);
+      background:rgba(15,23,48,.90);border:1px solid var(--line);
+      color:var(--text);
       border-radius:14px;padding:10px 12px;
       box-shadow:var(--shadow);
-      font-size:13px;font-weight:900;
+      font-size:13px;font-weight:1000;
       opacity:0;pointer-events:none;transition:.2s opacity,.2s transform;
+      backdrop-filter: blur(8px);
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(-2px)}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
@@ -192,7 +210,7 @@
       <div class="logo" aria-hidden="true"></div>
       <div>
         <h1>Racha — Divisão de Contas</h1>
-        <div class="sub">Participantes por despesa • PIX/conta por pessoa • Modo “por despesa” disponível</div>
+        <div class="sub">Auditável por despesa + Balanço final (reduz transferências) • PIX/conta por pessoa</div>
       </div>
     </div>
     <div class="actions">
@@ -204,7 +222,6 @@
   </header>
 
   <div class="grid">
-    <!-- LEFT -->
     <div class="card">
       <div class="row">
         <div style="flex:1.25">
@@ -262,9 +279,7 @@
 
         <div style="margin-top:10px">
           <div class="row" style="align-items:center">
-            <div>
-              <label>Participantes desta despesa</label>
-            </div>
+            <div><label>Participantes desta despesa</label></div>
             <div style="flex:.5;display:flex;justify-content:flex-end">
               <button class="mini" type="button" id="btnMarkAll">Marcar todos</button>
             </div>
@@ -272,7 +287,7 @@
 
           <div class="members" id="participants"></div>
           <div class="tiny" style="margin-top:8px">
-            O cálculo é <b>por despesa</b>, usando apenas os participantes marcados.
+            Auditável: cada despesa é rateada só entre os participantes marcados.
           </div>
         </div>
 
@@ -329,16 +344,6 @@
           <div class="kpi"><div class="v" id="kpiE">—</div><div class="l">Despesas</div></div>
         </div>
 
-        <div class="row" style="margin-top:10px">
-          <div>
-            <label>Modo de liquidação</label>
-            <select id="settleMode">
-              <option value="perExpense">Por despesa (cada um paga o pagador da despesa)</option>
-              <option value="net">Compensar tudo (mínimas transferências)</option>
-            </select>
-          </div>
-        </div>
-
         <div class="hr"></div>
 
         <h3 style="margin:0 0 8px 0;font-size:14px">Saldos (resultado final)</h3>
@@ -346,14 +351,20 @@
 
         <div class="hr"></div>
 
-        <h3 style="margin:0 0 8px 0;font-size:14px">Quem paga pra quem</h3>
-        <div class="tiny" style="margin-bottom:8px">No modo “por despesa”, quem participou sempre paga o pagador daquela despesa.</div>
-        <div id="settlement"></div>
+        <h3 style="margin:0 0 8px 0;font-size:14px">Auditável — por despesa</h3>
+        <div class="tiny" style="margin-bottom:8px">Aqui aparece quem paga o pagador de cada despesa (agrupado por pares).</div>
+        <div id="settlementAudit"></div>
 
         <div class="hr"></div>
 
-        <label>Resumo para compartilhar</label>
-        <textarea id="shareText" class="mono" style="min-height:220px"></textarea>
+        <h3 style="margin:0 0 8px 0;font-size:14px">Reduzir transferências — balanço final</h3>
+        <div class="tiny" style="margin-bottom:8px">Aqui o sistema compensa (se A paga B e B paga A, vira só 1).</div>
+        <div id="settlementNet"></div>
+
+        <div class="hr"></div>
+
+        <label>Resumo para compartilhar (2 blocos)</label>
+        <textarea id="shareText" class="mono" style="min-height:280px"></textarea>
 
         <div class="row" style="margin-top:10px">
           <button class="btn primary" id="btnCopyText" type="button">Copiar resumo</button>
@@ -362,16 +373,13 @@
       </section>
     </div>
 
-    <!-- RIGHT -->
     <div class="card">
       <div class="tiny">
-        <b>Regra do app:</b><br/>
-        • Cada despesa é rateada apenas entre os participantes marcados.<br/>
-        • Modo “Por despesa” mostra pagamentos diretos a cada pagador.<br/>
-        • Modo “Compensar” reduz o número de transferências.
+        <b>O que você pediu, implementado:</b><br/>
+        • Bloco 1: <b>Auditável</b> (por despesa).<br/>
+        • Bloco 2: <b>Reduzir transferências</b> (balanço final).<br/>
+        • PIX/conta por pessoa no resumo (recebedores).
       </div>
-      <div class="hr"></div>
-      <div class="tiny"><b>Dica:</b> se alguém participou e não aparece pagando, confira se ele estava marcado naquela despesa.</div>
     </div>
   </div>
 </div>
@@ -380,7 +388,7 @@
 
 <script>
 (function(){
-  const LS_KEY = "racha_clear_pix_v2";
+  const LS_KEY = "racha_vibrante_v3";
   const $ = (id)=>document.getElementById(id);
   const toastEl = $("toast");
   const alertEl = $("alert");
@@ -388,9 +396,8 @@
   const state = {
     groupName:"Grupo",
     currency:"R$",
-    settleMode:"perExpense",
-    people:[],
-    expenses:[]
+    people:[],      // {id,name,pay}
+    expenses:[]     // {id,desc,date,payerId,amountCents,splitType,participants:[{personId,included,weight}]}
   };
 
   function showToast(msg){
@@ -405,10 +412,7 @@
   function today(){ return new Date().toISOString().slice(0,10); }
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 
-  function save(){
-    if($("settleMode")) state.settleMode = $("settleMode").value;
-    localStorage.setItem(LS_KEY, JSON.stringify(state));
-  }
+  function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
   function load(){
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return false;
@@ -490,7 +494,6 @@
       box.appendChild(chip);
     });
   }
-
   function markAllParticipants(){
     document.querySelectorAll("#participants [data-inc]").forEach(ch=>ch.checked=true);
   }
@@ -509,499 +512,12 @@
     return included;
   }
 
-  // People render (with pay field)
+  // People render
   function renderPeople(){
     const list = $("peopleList");
     const empty = $("emptyPeople");
     list.innerHTML = "";
-    if(!state.people.length){ empty.style.display="block"; }
-    else empty.style.display="none";
-
-    state.people.forEach(p=>{
-      const item = document.createElement("div");
-      item.className="card";
-      item.style.margin="10px 0";
-      item.style.boxShadow="none";
-      item.innerHTML = `
-        <div class="row">
-          <div>
-            <label>Nome</label>
-            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
-          </div>
-          <div>
-            <label>PIX / Conta / IBAN</label>
-            <input value="${escapeHtml(p.pay || "")}" data-person-pay="${p.id}" autocomplete="off"
-                   placeholder="Opcional — aparece no resumo para pagamento"/>
-          </div>
-          <div style="flex:.55">
-            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
-          </div>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-
-    list.querySelectorAll("[data-person-name]").forEach(inp=>{
-      inp.addEventListener("input",(e)=>{
-        const id = e.target.getAttribute("data-person-name");
-        const p = state.people.find(x=>x.id===id);
-        if(!p) return;
-        p.name = e.target.value.trim() || "Sem nome";
-        save();
-        renderPayerOptions();
-        renderParticipants();
-        renderExpenses();
-        updateSummary();
-      });
-    });
-
-    list.querySelectorAll("[data-person-pay]").forEach(inp=>{
-      inp.addEventListener("input",(e)=>{
-        const id = e.target.getAttribute("data-person-pay");
-        const p = state.people.find(x=>x.id===id);
-        if(!p) return;
-        p.pay = e.target.value.trim();
-        save();
-        updateSummary();
-      });
-    });
-
-    list.querySelectorAll("[data-del-person]").forEach(btn=>{
-      btn.addEventListener("click",()=>{
-        const id = btn.getAttribute("data-del-person");
-        state.people = state.people.filter(p=>p.id!==id);
-        state.expenses.forEach(ex=>{
-          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
-          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
-        });
-        save();
-        renderAll();
-        showToast("Pessoa removida.");
-      });
-    });
-  }
-
-  // Expenses render
-  function renderExpenses(){
-    const tbody = $("expensesTbody");
-    const empty = $("emptyExpenses");
-    tbody.innerHTML = "";
-    if(!state.expenses.length){ empty.style.display="block"; }
-    else empty.style.display="none";
-
-    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
-    const rows = [...state.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-
-    rows.forEach(ex=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${escapeHtml(ex.date || "—")}</td>
-        <td>${escapeHtml(ex.desc || "—")}</td>
-        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
-        <td><span class="badge">${money(ex.amountCents||0)}</span></td>
-        <td>
-          <div class="t-actions">
-            <button class="mini" type="button" data-del-exp="${ex.id}">Excluir</button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    tbody.querySelectorAll("[data-del-exp]").forEach(btn=>{
-      btn.addEventListener("click",()=>{
-        const id = btn.getAttribute("data-del-exp");
-        state.expenses = state.expenses.filter(e=>e.id!==id);
-        save();
-        renderExpenses();
-        updateSummary();
-        showToast("Despesa removida.");
-      });
-    });
-  }
-
-  // Validation
-  function clearInvalid(){
-    ["expDesc","expAmount"].forEach(id=>$(id).classList.remove("invalid"));
-    showAlert("");
-  }
-
-  function validateExpense(desc, amountCents, payerId, participants){
-    clearInvalid();
-    if(!state.people.length){
-      showAlert("⚠️ Adicione pessoas primeiro (aba Pessoas).");
-      return false;
-    }
-    if(!desc){
-      $("expDesc").classList.add("invalid");
-      showAlert("⚠️ Descrição obrigatória.");
-      $("expDesc").focus();
-      return false;
-    }
-    if(amountCents==null || amountCents<=0){
-      $("expAmount").classList.add("invalid");
-      showAlert("⚠️ Valor inválido. Use 125,00.");
-      $("expAmount").focus();
-      return false;
-    }
-    if(!payerId){
-      showAlert("⚠️ Selecione quem pagou.");
-      return false;
-    }
-    if(!participants.length){
-      showAlert("⚠️ Marque pelo menos 1 participante.");
-      return false;
-    }
-    if($("splitType").value==="weights"){
-      const sumW = participants.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-      if(sumW<=0){
-        showAlert("⚠️ Em 'pesos', a soma dos pesos precisa ser > 0.");
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // Helpers: shares for one expense (Map personId -> cents)
-  function computeSharesForExpense(ex){
-    const amount = ex.amountCents || 0;
-    const parts = (ex.participants||[]).filter(p=>p.included);
-    const shares = new Map();
-    if(!parts.length || amount<=0) return shares;
-
-    if(ex.splitType==="weights"){
-      const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
-      if(totalW<=0) return shares;
-
-      const raw = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
-      let base = raw.reduce((a,b)=>a+b,0);
-      let rem = amount - base;
-      for(let i=0;i<parts.length && rem>0;i++){ raw[i]+=1; rem-=1; }
-      parts.forEach((p,i)=> shares.set(p.personId, raw[i]));
-      return shares;
-    }
-
-    // equal
-    const n = parts.length;
-    const share = Math.floor(amount / n);
-    let rem = amount - (share*n);
-    parts.forEach(p=>{
-      const extra = rem>0 ? 1 : 0;
-      if(rem>0) rem--;
-      shares.set(p.personId, share + extra);
-    });
-    return shares;
-  }
-
-  // Core: balances (final result) always computed as net balances
-  function computeBalances(){
-    const bal = new Map(state.people.map(p=>[p.id, 0]));
-    state.expenses.forEach(ex=>{
-      const amount = ex.amountCents || 0;
-      // credit payer
-      bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
-      // debit participants by their share for this expense
-      const shares = computeSharesForExpense(ex);
-      for(const [pid, cents] of shares.entries()){
-        bal.set(pid, (bal.get(pid)||0) - cents);
-      }
-    });
-    return bal;
-  }
-
-  // Settlement: two modes
-  function computeSettlement(bal){
-    const mode = state.settleMode || "perExpense";
-
-    // Mode A: per expense (each participant pays the payer of that expense)
-    if(mode === "perExpense"){
-      const pair = new Map(); // "from|to" -> cents
-
-      for(const ex of state.expenses){
-        const payer = ex.payerId;
-        if(!payer) continue;
-
-        const shares = computeSharesForExpense(ex);
-        for(const [pid, cents] of shares.entries()){
-          if(pid === payer) continue;
-          const key = pid + "|" + payer;
-          pair.set(key, (pair.get(key)||0) + cents);
-        }
-      }
-
-      const transfers = [];
-      for(const [key, cents] of pair.entries()){
-        if(cents<=0) continue;
-        const [from,to] = key.split("|");
-        transfers.push({from,to,amount:cents});
-      }
-      transfers.sort((a,b)=>b.amount-a.amount);
-      return transfers;
-    }
-
-    // Mode B: netting (minimum transfers)
-    const creditors=[], debtors=[];
-    for(const [pid,cents] of bal.entries()){
-      if(cents>0) creditors.push([pid,cents]);
-      else if(cents<0) debtors.push([pid,-cents]);
-    }
-    creditors.sort((a,b)=>b[1]-a[1]);
-    debtors.sort((a,b)=>b[1]-a[1]);
-
-    const transfers=[];
-    let i=0,j=0;
-    while(i<debtors.length && j<creditors.length){
-      const x = Math.min(debtors[i][1], creditors[j][1]);
-      transfers.push({from:debtors[i][0], to:creditors[j][0], amount:x});
-      debtors[i][1]-=x; creditors[j][1]-=x;
-      if(debtors[i][1]===0) i++;
-      if(creditors[j][1]===0) j++;
-    }
-    return transfers;
-  }
-
-  function updateSummary(){
-    const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
-    $("kpiTotal").textContent = money(total);
-    $("kpiN").textContent = String(state.people.length);
-    $("kpiE").textContent = String(state.expenses.length);
-
-    const balancesDiv = $("balances");
-    const settlementDiv = $("settlement");
-    const shareTextEl = $("shareText");
-    balancesDiv.innerHTML = "";
-    settlementDiv.innerHTML = "";
-    shareTextEl.value = "";
-
-    if(!state.people.length){
-      balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas para ver o resumo.</div>`;
-      settlementDiv.innerHTML = `<div class="tiny">Sem pessoas ainda.</div>`;
-      shareTextEl.value = makeShareText([], [], total);
-      return;
-    }
-
-    const peopleMap = new Map(state.people.map(p=>[p.id,p]));
-    const bal = computeBalances();
-    const items = state.people
-      .map(p=>({id:p.id, name:p.name, v:(bal.get(p.id)||0)}))
-      .sort((a,b)=>b.v-a.v);
-
-    // balances table
-    const t = document.createElement("table");
-    t.innerHTML = `
-      <thead><tr><th>Pessoa</th><th>Saldo</th><th>Status</th></tr></thead>
-      <tbody>
-        ${items.map(it=>{
-          const cls = it.v>0 ? "badge pos" : (it.v<0 ? "badge neg" : "badge");
-          const status = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
-          return `<tr>
-            <td>${escapeHtml(it.name)}</td>
-            <td><span class="${cls}">${money(it.v)}</span></td>
-            <td class="tiny">${status}</td>
-          </tr>`;
-        }).join("")}
-      </tbody>
-    `;
-    balancesDiv.appendChild(t);
-
-    const transfers = computeSettlement(bal);
-    if(!transfers.length){
-      settlementDiv.innerHTML = `<div class="tiny">Sem transferências necessárias.</div>`;
-    } else {
-      const box = document.createElement("div");
-      box.className="card";
-      box.style.boxShadow="none";
-      box.style.margin="0";
-      box.innerHTML = transfers.map(tr=>{
-        const from = peopleMap.get(tr.from)?.name || "?";
-        const toObj = peopleMap.get(tr.to);
-        const toName = toObj?.name || "?";
-        return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
-          <b>${escapeHtml(from)}</b> paga <b>${escapeHtml(toName)}</b>
-          <span class="badge" style="margin-left:8px">${money(tr.amount)}</span>
-        </div>`;
-      }).join("");
-      settlementDiv.appendChild(box);
-    }
-
-    shareTextEl.value = makeShareText(items, transfers, total);
-  }
-
-  function makeShareText(balItems, transfers, total){
-    const group = (state.groupName || "Grupo").trim();
-    const lines = [];
-    lines.push(`RACHA — ${group}`);
-    lines.push(`Total: ${money(total)} | Pessoas: ${state.people.length} | Despesas: ${state.expenses.length}`);
-    lines.push(`Modo de liquidação: ${state.settleMode === "perExpense" ? "Por despesa" : "Compensado"}`);
-    lines.push("");
-
-    lines.push("Saldos (resultado final):");
-    balItems.forEach(it=>{
-      const tag = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
-      lines.push(`- ${it.name}: ${money(it.v)} (${tag})`);
-    });
-
-    lines.push("");
-    lines.push("Transferências (quem paga pra quem):");
-    if(!transfers.length){
-      lines.push("- Nenhuma (tudo zerado).");
-    } else {
-      transfers.forEach(tr=>{
-        const from = state.people.find(p=>p.id===tr.from)?.name || "?";
-        const toObj = state.people.find(p=>p.id===tr.to);
-        const toName = toObj?.name || "?";
-        lines.push(`- ${from} -> ${toName}: ${money(tr.amount)}`);
-      });
-    }
-
-    // Dados de pagamento: somente quem vai receber (saldo positivo)
-    const receivers = balItems
-      .filter(x=>x.v>0)
-      .map(x=>{
-        const p = state.people.find(pp=>pp.id===x.id);
-        return {name:x.name, pay:(p?.pay||"").trim()};
-      });
-
-    lines.push("");
-    lines.push("Dados para pagamento (recebedores):");
-    if(!receivers.length){
-      lines.push("- (ninguém recebe)");
-    } else {
-      receivers.forEach(r=>{
-        lines.push(`- ${r.name}: ${r.pay ? r.pay : "(sem PIX/conta informado)"}`);
-      });
-    }
-
-    return lines.join("\n");
-  }
-
-  async function copy(text){
-    try{
-      await navigator.clipboard.writeText(text);
-      showToast("Resumo copiado.");
-    }catch{
-      prompt("Copie o resumo:", text);
-    }
-  }
-
-  function exportJson(){
-    const payload = {
-      groupName: state.groupName,
-      currency: state.currency,
-      settleMode: state.settleMode,
-      people: state.people,
-      expenses: state.expenses
-    };
-    const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = ("racha_" + (state.groupName||"grupo").replace(/\s+/g,"_") + ".json");
-    a.click();
-    URL.revokeObjectURL(a.href);
-    showToast("JSON baixado.");
-  }
-
-  function importJson(){
-    const input = document.createElement("input");
-    input.type="file";
-    input.accept="application/json";
-    input.onchange = async ()=>{
-      const file = input.files && input.files[0];
-      if(!file) return;
-      try{
-        const txt = await file.text();
-        const obj = JSON.parse(txt);
-        state.groupName = obj.groupName ?? state.groupName;
-        state.currency  = obj.currency ?? state.currency;
-        state.settleMode = obj.settleMode ?? state.settleMode;
-        state.people    = Array.isArray(obj.people) ? obj.people : [];
-        state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
-        save();
-        renderAll();
-        showToast("Importado.");
-      }catch{
-        showToast("JSON inválido.");
-      }
-    };
-    input.click();
-  }
-
-  // Events
-  $("groupName").addEventListener("input", ()=>{ state.groupName = $("groupName").value.trim()||"Grupo"; save(); updateSummary(); });
-  $("currency").addEventListener("change", ()=>{ state.currency = $("currency").value; save(); renderExpenses(); updateSummary(); });
-
-  $("splitType").addEventListener("change", ()=>renderParticipants());
-  $("btnMarkAll").addEventListener("click", ()=>{ markAllParticipants(); showToast("Todos marcados."); });
-
-  $("settleMode").addEventListener("change", ()=>{ save(); updateSummary(); });
-
-  $("btnAddPerson").addEventListener("click", ()=>{
-    const name = $("personName").value.trim();
-    const pay = $("personPay").value.trim();
-    if(!name) return showToast("Digite um nome.");
-    state.people.push({id:uid(), name, pay});
-    $("personName").value="";
-    $("personPay").value="";
-    save();
-    renderAll();
-    showToast("Pessoa adicionada.");
-  });
-
-  $("btnClearExp").addEventListener("click", ()=>{
-    $("expDesc").value="";
-    $("expAmount").value="";
-    $("splitType").value="equal";
-    $("expDate").value=today();
-    clearInvalid();
-    renderParticipants();
-  });
-
-  $("btnAddExpense").addEventListener("click", ()=>{
-    const desc = $("expDesc").value.trim();
-    const date = $("expDate").value || today();
-    const payerId = $("expPayer").value || "";
-    const amountCents = toCents($("expAmount").value);
-    const splitType = $("splitType").value;
-    const participants = getSelectedParticipants();
-
-    if(!validateExpense(desc, amountCents, payerId, participants)) return;
-
-    state.expenses.push({
-      id:uid(),
-      desc, date, payerId,
-      amountCents,
-      splitType,
-      participants
-    });
-
-    save();
-    renderExpenses();
-    updateSummary();
-    showToast("Despesa adicionada.");
-
-    $("expDesc").value="";
-    $("expAmount").value="";
-    showAlert("");
-  });
-
-  $("btnCopySummary").addEventListener("click", ()=>{ setTab("resumo"); copy($("shareText").value || ""); });
-  $("btnCopyText").addEventListener("click", ()=>copy($("shareText").value || ""));
-  $("btnExport").addEventListener("click", exportJson);
-  $("btnExport2").addEventListener("click", exportJson);
-  $("btnImport").addEventListener("click", importJson);
-
-  $("btnReset").addEventListener("click", ()=>{
-    if(!confirm("Resetar tudo (pessoas + despesas)?")) return;
-    localStorage.removeItem(LS_KEY);
-    location.reload();
-  });
-
-  function renderPeople(){
-    const list = $("peopleList");
-    const empty = $("emptyPeople");
-    list.innerHTML = "";
-    if(!state.people.length){ empty.style.display="block"; }
-    else empty.style.display="none";
+    empty.style.display = state.people.length ? "none" : "block";
 
     state.people.forEach(p=>{
       const item = document.createElement("div");
@@ -1067,10 +583,389 @@
     });
   }
 
+  // Expenses render
+  function renderExpenses(){
+    const tbody = $("expensesTbody");
+    const empty = $("emptyExpenses");
+    tbody.innerHTML = "";
+    empty.style.display = state.expenses.length ? "none" : "block";
+
+    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
+    const rows = [...state.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+    rows.forEach(ex=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(ex.date || "—")}</td>
+        <td>${escapeHtml(ex.desc || "—")}</td>
+        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
+        <td><span class="badge">${money(ex.amountCents||0)}</span></td>
+        <td>
+          <div class="t-actions">
+            <button class="mini" type="button" data-del-exp="${ex.id}">Excluir</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll("[data-del-exp]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id = btn.getAttribute("data-del-exp");
+        state.expenses = state.expenses.filter(e=>e.id!==id);
+        save();
+        renderExpenses();
+        updateSummary();
+        showToast("Despesa removida.");
+      });
+    });
+  }
+
+  // Validation
+  function clearInvalid(){
+    ["expDesc","expAmount"].forEach(id=>$(id).classList.remove("invalid"));
+    showAlert("");
+  }
+  function validateExpense(desc, amountCents, payerId, participants){
+    clearInvalid();
+    if(!state.people.length){ showAlert("⚠️ Adicione pessoas primeiro (aba Pessoas)."); return false; }
+    if(!desc){ $("expDesc").classList.add("invalid"); showAlert("⚠️ Descrição obrigatória."); $("expDesc").focus(); return false; }
+    if(amountCents==null || amountCents<=0){ $("expAmount").classList.add("invalid"); showAlert("⚠️ Valor inválido. Use 125,00."); $("expAmount").focus(); return false; }
+    if(!payerId){ showAlert("⚠️ Selecione quem pagou."); return false; }
+    if(!participants.length){ showAlert("⚠️ Marque pelo menos 1 participante."); return false; }
+    if($("splitType").value==="weights"){
+      const sumW = participants.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+      if(sumW<=0){ showAlert("⚠️ Em 'pesos', a soma dos pesos precisa ser > 0."); return false; }
+    }
+    return true;
+  }
+
+  // Shares for one expense
+  function computeSharesForExpense(ex){
+    const amount = ex.amountCents || 0;
+    const parts = (ex.participants||[]).filter(p=>p.included);
+    const shares = new Map();
+    if(!parts.length || amount<=0) return shares;
+
+    if(ex.splitType==="weights"){
+      const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
+      if(totalW<=0) return shares;
+
+      const raw = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
+      let base = raw.reduce((a,b)=>a+b,0);
+      let rem = amount - base;
+      for(let i=0;i<parts.length && rem>0;i++){ raw[i]+=1; rem-=1; }
+      parts.forEach((p,i)=> shares.set(p.personId, raw[i]));
+      return shares;
+    }
+
+    // equal
+    const n = parts.length;
+    const share = Math.floor(amount / n);
+    let rem = amount - (share*n);
+    parts.forEach(p=>{
+      const extra = rem>0 ? 1 : 0;
+      if(rem>0) rem--;
+      shares.set(p.personId, share + extra);
+    });
+    return shares;
+  }
+
+  // Net balances (final)
+  function computeBalances(){
+    const bal = new Map(state.people.map(p=>[p.id, 0]));
+    state.expenses.forEach(ex=>{
+      const amount = ex.amountCents || 0;
+      bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
+      const shares = computeSharesForExpense(ex);
+      for(const [pid, cents] of shares.entries()){
+        bal.set(pid, (bal.get(pid)||0) - cents);
+      }
+    });
+    return bal;
+  }
+
+  // Audit mode: per expense (grouped by pair)
+  function computeSettlementPerExpense(){
+    const pair = new Map(); // "from|to" -> cents
+    for(const ex of state.expenses){
+      const payer = ex.payerId;
+      if(!payer) continue;
+      const shares = computeSharesForExpense(ex);
+      for(const [pid, cents] of shares.entries()){
+        if(pid === payer) continue;
+        const key = pid + "|" + payer;
+        pair.set(key, (pair.get(key)||0) + cents);
+      }
+    }
+    const transfers = [];
+    for(const [key, cents] of pair.entries()){
+      if(cents<=0) continue;
+      const [from,to] = key.split("|");
+      transfers.push({from,to,amount:cents});
+    }
+    transfers.sort((a,b)=>b.amount-a.amount);
+    return transfers;
+  }
+
+  // Netting: minimum transfers from balances
+  function computeSettlementNetFromBalances(bal){
+    const creditors=[], debtors=[];
+    for(const [pid,cents] of bal.entries()){
+      if(cents>0) creditors.push([pid,cents]);
+      else if(cents<0) debtors.push([pid,-cents]);
+    }
+    creditors.sort((a,b)=>b[1]-a[1]);
+    debtors.sort((a,b)=>b[1]-a[1]);
+
+    const transfers=[];
+    let i=0,j=0;
+    while(i<debtors.length && j<creditors.length){
+      const x = Math.min(debtors[i][1], creditors[j][1]);
+      transfers.push({from:debtors[i][0], to:creditors[j][0], amount:x});
+      debtors[i][1]-=x; creditors[j][1]-=x;
+      if(debtors[i][1]===0) i++;
+      if(creditors[j][1]===0) j++;
+    }
+    return transfers;
+  }
+
+  // Render a transfer list
+  function renderTransfers(containerId, transfers, peopleMap){
+    const div = $(containerId);
+    div.innerHTML = "";
+    if(!transfers.length){
+      div.innerHTML = `<div class="tiny">Sem transferências.</div>`;
+      return;
+    }
+    const box = document.createElement("div");
+    box.className="card";
+    box.style.boxShadow="none";
+    box.style.margin="0";
+    box.innerHTML = transfers.map(tr=>{
+      const from = peopleMap.get(tr.from)?.name || "?";
+      const to = peopleMap.get(tr.to)?.name || "?";
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
+        <b>${escapeHtml(from)}</b> paga <b>${escapeHtml(to)}</b>
+        <span class="badge" style="margin-left:8px">${money(tr.amount)}</span>
+      </div>`;
+    }).join("");
+    div.appendChild(box);
+  }
+
+  function updateSummary(){
+    const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
+    $("kpiTotal").textContent = money(total);
+    $("kpiN").textContent = String(state.people.length);
+    $("kpiE").textContent = String(state.expenses.length);
+
+    const balancesDiv = $("balances");
+    const shareTextEl = $("shareText");
+    balancesDiv.innerHTML = "";
+    shareTextEl.value = "";
+
+    const peopleMap = new Map(state.people.map(p=>[p.id,p]));
+    if(!state.people.length){
+      balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas para ver o resumo.</div>`;
+      $("settlementAudit").innerHTML = `<div class="tiny">Sem pessoas.</div>`;
+      $("settlementNet").innerHTML = `<div class="tiny">Sem pessoas.</div>`;
+      shareTextEl.value = makeShareText([], [], [], total);
+      return;
+    }
+
+    const bal = computeBalances();
+    const items = state.people
+      .map(p=>({id:p.id, name:p.name, v:(bal.get(p.id)||0)}))
+      .sort((a,b)=>b.v-a.v);
+
+    // balances table
+    const t = document.createElement("table");
+    t.innerHTML = `
+      <thead><tr><th>Pessoa</th><th>Saldo</th><th>Status</th></tr></thead>
+      <tbody>
+        ${items.map(it=>{
+          const cls = it.v>0 ? "badge pos" : (it.v<0 ? "badge neg" : "badge");
+          const status = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
+          return `<tr>
+            <td>${escapeHtml(it.name)}</td>
+            <td><span class="${cls}">${money(it.v)}</span></td>
+            <td class="tiny">${status}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    `;
+    balancesDiv.appendChild(t);
+
+    const auditTransfers = computeSettlementPerExpense();
+    const netTransfers = computeSettlementNetFromBalances(bal);
+
+    renderTransfers("settlementAudit", auditTransfers, peopleMap);
+    renderTransfers("settlementNet", netTransfers, peopleMap);
+
+    shareTextEl.value = makeShareText(items, auditTransfers, netTransfers, total);
+  }
+
+  function makeShareText(balItems, auditTransfers, netTransfers, total){
+    const group = (state.groupName || "Grupo").trim();
+    const lines = [];
+    lines.push(`RACHA — ${group}`);
+    lines.push(`Total: ${money(total)} | Pessoas: ${state.people.length} | Despesas: ${state.expenses.length}`);
+    lines.push("");
+
+    lines.push("Saldos (resultado final):");
+    balItems.forEach(it=>{
+      const tag = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
+      lines.push(`- ${it.name}: ${money(it.v)} (${tag})`);
+    });
+
+    // BLOCO 1 (auditável)
+    lines.push("");
+    lines.push("AUDITÁVEL — por despesa (quem paga o pagador da despesa):");
+    if(!auditTransfers.length){
+      lines.push("- Sem transferências.");
+    } else {
+      auditTransfers.forEach(tr=>{
+        const from = state.people.find(p=>p.id===tr.from)?.name || "?";
+        const to = state.people.find(p=>p.id===tr.to)?.name || "?";
+        lines.push(`- ${from} -> ${to}: ${money(tr.amount)}`);
+      });
+    }
+
+    // BLOCO 2 (netting)
+    lines.push("");
+    lines.push("REDUZIR TRANSFERÊNCIAS — balanço final (mínimas transferências):");
+    if(!netTransfers.length){
+      lines.push("- Nenhuma (tudo zerado).");
+    } else {
+      netTransfers.forEach(tr=>{
+        const from = state.people.find(p=>p.id===tr.from)?.name || "?";
+        const to = state.people.find(p=>p.id===tr.to)?.name || "?";
+        lines.push(`- ${from} -> ${to}: ${money(tr.amount)}`);
+      });
+    }
+
+    // Dados para pagamento: mostrar recebedores + total a receber (do NET)
+    const recv = new Map(); // to -> cents
+    netTransfers.forEach(tr=> recv.set(tr.to, (recv.get(tr.to)||0) + tr.amount));
+
+    lines.push("");
+    lines.push("Dados para pagamento (recebedores — usar o bloco REDUZIR TRANSFERÊNCIAS):");
+    if(recv.size===0){
+      lines.push("- (ninguém recebe)");
+    } else {
+      for(const [toId, cents] of [...recv.entries()].sort((a,b)=>b[1]-a[1])){
+        const p = state.people.find(x=>x.id===toId);
+        const name = p?.name || "?";
+        const pay = (p?.pay || "").trim() || "(sem PIX/conta informado)";
+        lines.push(`- ${name} recebe ${money(cents)} — ${pay}`);
+      }
+    }
+
+    return lines.join("\n");
+  }
+
+  async function copy(text){
+    try{ await navigator.clipboard.writeText(text); showToast("Resumo copiado."); }
+    catch{ prompt("Copie o resumo:", text); }
+  }
+
+  function exportJson(){
+    const payload = { groupName: state.groupName, currency: state.currency, people: state.people, expenses: state.expenses };
+    const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = ("racha_" + (state.groupName||"grupo").replace(/\s+/g,"_") + ".json");
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast("JSON baixado.");
+  }
+
+  function importJson(){
+    const input = document.createElement("input");
+    input.type="file";
+    input.accept="application/json";
+    input.onchange = async ()=>{
+      const file = input.files && input.files[0];
+      if(!file) return;
+      try{
+        const obj = JSON.parse(await file.text());
+        state.groupName = obj.groupName ?? state.groupName;
+        state.currency  = obj.currency ?? state.currency;
+        state.people    = Array.isArray(obj.people) ? obj.people : [];
+        state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
+        save();
+        renderAll();
+        showToast("Importado.");
+      }catch{ showToast("JSON inválido."); }
+    };
+    input.click();
+  }
+
+  // Events
+  $("groupName").addEventListener("input", ()=>{ state.groupName = $("groupName").value.trim()||"Grupo"; save(); updateSummary(); });
+  $("currency").addEventListener("change", ()=>{ state.currency = $("currency").value; save(); renderExpenses(); updateSummary(); });
+
+  $("splitType").addEventListener("change", ()=>renderParticipants());
+  $("btnMarkAll").addEventListener("click", ()=>{ markAllParticipants(); showToast("Todos marcados."); });
+
+  $("btnAddPerson").addEventListener("click", ()=>{
+    const name = $("personName").value.trim();
+    const pay = $("personPay").value.trim();
+    if(!name) return showToast("Digite um nome.");
+    state.people.push({id:uid(), name, pay});
+    $("personName").value="";
+    $("personPay").value="";
+    save();
+    renderAll();
+    showToast("Pessoa adicionada.");
+  });
+
+  $("btnClearExp").addEventListener("click", ()=>{
+    $("expDesc").value="";
+    $("expAmount").value="";
+    $("splitType").value="equal";
+    $("expDate").value=today();
+    clearInvalid();
+    renderParticipants();
+  });
+
+  $("btnAddExpense").addEventListener("click", ()=>{
+    const desc = $("expDesc").value.trim();
+    const date = $("expDate").value || today();
+    const payerId = $("expPayer").value || "";
+    const amountCents = toCents($("expAmount").value);
+    const splitType = $("splitType").value;
+    const participants = getSelectedParticipants();
+
+    if(!validateExpense(desc, amountCents, payerId, participants)) return;
+
+    state.expenses.push({ id:uid(), desc, date, payerId, amountCents, splitType, participants });
+
+    save();
+    renderExpenses();
+    updateSummary();
+    showToast("Despesa adicionada.");
+
+    $("expDesc").value="";
+    $("expAmount").value="";
+    showAlert("");
+  });
+
+  $("btnCopySummary").addEventListener("click", ()=>{ setTab("resumo"); copy($("shareText").value || ""); });
+  $("btnCopyText").addEventListener("click", ()=>copy($("shareText").value || ""));
+  $("btnExport").addEventListener("click", exportJson);
+  $("btnExport2").addEventListener("click", exportJson);
+  $("btnImport").addEventListener("click", importJson);
+
+  $("btnReset").addEventListener("click", ()=>{
+    if(!confirm("Resetar tudo (pessoas + despesas)?")) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  });
+
   function renderAll(){
     $("groupName").value = state.groupName || "Grupo";
     $("currency").value = state.currency || "R$";
-    $("settleMode").value = state.settleMode || "perExpense";
     if(!$("expDate").value) $("expDate").value = today();
 
     renderPeople();
@@ -1080,12 +975,11 @@
     updateSummary();
   }
 
-  // init
+  // Init
   load();
   if(!state.people.length){
-    state.groupName = "Exemplo";
-    state.currency = "R$";
-    state.settleMode = "perExpense";
+    state.groupName = "Partiu Holanda";
+    state.currency = "€";
     state.people = [
       {id:uid(), name:"Claúmir", pay:""},
       {id:uid(), name:"Ernandes", pay:""},
