@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Racha — Contas entre amigos</title>
+  <title>Racha — Divisão de Contas</title>
   <meta name="theme-color" content="#0f2a1f"/>
   <style>
     :root{
@@ -28,8 +28,7 @@
     header{
       display:flex;gap:12px;align-items:center;justify-content:space-between;
       padding:12px;border:1px solid var(--line);border-radius:var(--r);
-      background:linear-gradient(135deg, #ffffff, #ffffff);
-      box-shadow:var(--shadow);
+      background:#fff;box-shadow:var(--shadow);
       position:sticky;top:10px;z-index:20;
     }
     .brand{display:flex;gap:12px;align-items:center}
@@ -64,7 +63,7 @@
       border-color:rgba(239,68,68,.25);
     }
 
-    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
     @media (max-width:940px){.grid{grid-template-columns:1fr}}
 
     .card{
@@ -94,7 +93,7 @@
     .hide{display:none}
 
     label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px}
-    input,select{
+    input,select,textarea{
       width:100%;
       border:1px solid var(--line);
       border-radius:14px;
@@ -103,7 +102,7 @@
       color:var(--text);
       outline:none;
     }
-    input::placeholder{color:#94a3b8}
+    input::placeholder, textarea::placeholder{color:#94a3b8}
     input[type="date"]{padding:10px 12px}
 
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
@@ -111,23 +110,6 @@
 
     .hr{height:1px;background:var(--line);margin:12px 0}
     .tiny{font-size:12px;color:var(--muted);line-height:1.5}
-
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid var(--line);
-      background:#fff;
-      padding:6px 10px;border-radius:999px;
-      font-size:12px;font-weight:1000;
-    }
-    .badge{
-      display:inline-flex;align-items:center;
-      padding:4px 8px;border-radius:999px;
-      font-size:12px;font-weight:1000;
-      border:1px solid rgba(31,81,60,.22);
-      background:rgba(31,81,60,.06);
-    }
-    .pos{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.08)}
-    .neg{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
     .members{
       display:flex;flex-wrap:wrap;gap:10px;
@@ -170,6 +152,16 @@
     .kpi .v{font-size:18px;font-weight:1100}
     .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
 
+    .badge{
+      display:inline-flex;align-items:center;
+      padding:4px 8px;border-radius:999px;
+      font-size:12px;font-weight:1000;
+      border:1px solid rgba(31,81,60,.22);
+      background:rgba(31,81,60,.06);
+    }
+    .pos{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.08)}
+    .neg{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+
     .alert{
       border:1px solid rgba(239,68,68,.25);
       background:rgba(239,68,68,.07);
@@ -191,14 +183,6 @@
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(-2px)}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .bigShare{
-      border:1px solid rgba(31,81,60,.22);
-      background:linear-gradient(135deg, rgba(31,81,60,.08), rgba(198,164,75,.10));
-      border-radius:18px;
-      padding:12px;
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      margin-top:10px;
-    }
   </style>
 </head>
 <body>
@@ -207,12 +191,12 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>Racha — Contas entre amigos</h1>
-        <div class="sub">Claro • editável • funciona como calculadora • exporta/ importa JSON</div>
+        <h1>Racha — Divisão de Contas</h1>
+        <div class="sub">Participantes por despesa • PIX/conta por pessoa • Exporta/Importa JSON</div>
       </div>
     </div>
     <div class="actions">
-      <button class="btn primary" id="btnCopyFunny" type="button">Copiar resumo funny</button>
+      <button class="btn primary" id="btnCopySummary" type="button">Copiar resumo</button>
       <button class="btn" id="btnExport" type="button">Baixar JSON</button>
       <button class="btn" id="btnImport" type="button">Importar JSON</button>
       <button class="btn bad" id="btnReset" type="button">Resetar</button>
@@ -225,7 +209,7 @@
       <div class="row">
         <div style="flex:1.25">
           <label>Nome do grupo</label>
-          <input id="groupName" placeholder="Ex.: Airbnb Holanda / Churrasco / Viagem" autocomplete="off"/>
+          <input id="groupName" placeholder="Ex.: Airbnb / Viagem / Churrasco" autocomplete="off"/>
         </div>
         <div>
           <label>Moeda</label>
@@ -250,7 +234,7 @@
         <div class="row">
           <div style="flex:1.2">
             <label>Descrição da despesa *</label>
-            <input id="expDesc" placeholder="Ex.: Almoço, Uber, Mercado" autocomplete="off"/>
+            <input id="expDesc" placeholder="Ex.: Mercado, Uber, Jantar" autocomplete="off"/>
           </div>
           <div style="flex:.7">
             <label>Data</label>
@@ -267,20 +251,20 @@
             <label>Valor</label>
             <input id="expAmount" inputmode="decimal" placeholder="Ex.: 125,00"/>
           </div>
-          <div style="flex:.9">
+          <div style="flex:.95">
             <label>Divisão</label>
             <select id="splitType">
-              <option value="equal">Igual (divide igualmente)</option>
+              <option value="equal">Igual (entre participantes marcados)</option>
               <option value="weights">Por pesos (cotas)</option>
             </select>
           </div>
         </div>
 
         <div style="margin-top:10px">
-          <label>Participantes</label>
+          <label>Participantes desta despesa</label>
           <div class="members" id="participants"></div>
           <div class="tiny" style="margin-top:8px">
-            Dica rápida: em <b>Pesos</b>, quem consumiu mais pode ser 2, quem consumiu menos 1.
+            O cálculo é <b>por despesa</b>, usando apenas os participantes marcados.
           </div>
         </div>
 
@@ -311,8 +295,12 @@
       <section id="tab-pessoas" class="hide">
         <div class="row">
           <div>
-            <label>Adicionar pessoa</label>
-            <input id="personName" placeholder="Ex.: Ernandes, Claumir, Áurea" autocomplete="off"/>
+            <label>Nome</label>
+            <input id="personName" placeholder="Ex.: Ernandes" autocomplete="off"/>
+          </div>
+          <div>
+            <label>PIX / Conta / IBAN (opcional)</label>
+            <input id="personPay" placeholder="Ex.: chave PIX, banco/agência/conta, IBAN..." autocomplete="off"/>
           </div>
           <div style="flex:.6">
             <button class="btn good" id="btnAddPerson" type="button">Adicionar</button>
@@ -329,16 +317,8 @@
       <section id="tab-resumo" class="hide">
         <div class="kpis">
           <div class="kpi"><div class="v" id="kpiTotal">—</div><div class="l">Total gasto</div></div>
-          <div class="kpi"><div class="v" id="kpiEach">—</div><div class="l">Por pessoa (igual)</div></div>
           <div class="kpi"><div class="v" id="kpiN">—</div><div class="l">Pessoas</div></div>
-        </div>
-
-        <div class="bigShare">
-          <div>
-            <div style="font-weight:1100">📲 Compartilhar só o resumo</div>
-            <div class="tiny">Copia um texto engraçadinho + claro (WhatsApp-ready).</div>
-          </div>
-          <button class="btn primary" id="btnCopyFunny2" type="button">Copiar resumo funny</button>
+          <div class="kpi"><div class="v" id="kpiE">—</div><div class="l">Despesas</div></div>
         </div>
 
         <div class="hr"></div>
@@ -349,33 +329,32 @@
         <div class="hr"></div>
 
         <h3 style="margin:0 0 8px 0;font-size:14px">Quem paga pra quem</h3>
-        <div class="tiny" style="margin-bottom:8px">Transferências mínimas pra zerar tudo.</div>
+        <div class="tiny" style="margin-bottom:8px">Transferências mínimas para zerar tudo.</div>
         <div id="settlement"></div>
 
         <div class="hr"></div>
 
-        <label>Texto do resumo (pronto pra copiar)</label>
-        <textarea id="shareText" class="mono" style="width:100%;min-height:170px;border:1px solid var(--line);border-radius:16px;padding:12px"></textarea>
+        <label>Resumo para compartilhar</label>
+        <textarea id="shareText" class="mono" style="min-height:200px"></textarea>
+
         <div class="row" style="margin-top:10px">
-          <button class="btn primary" id="btnCopyText" type="button">Copiar texto acima</button>
-          <button class="btn" id="btnDownloadJson2" type="button">Baixar JSON</button>
+          <button class="btn primary" id="btnCopyText" type="button">Copiar resumo</button>
+          <button class="btn" id="btnExport2" type="button">Baixar JSON</button>
         </div>
       </section>
     </div>
 
     <!-- RIGHT -->
     <div class="card">
-      <div class="pill">✅ Calculadora viva: muda algo → recalcula tudo</div>
-      <div class="hr"></div>
       <div class="tiny">
-        <b>Como usar (bem rápido):</b><br/>
-        1) Vá em <b>Pessoas</b> e adicione todo mundo.<br/>
-        2) Em <b>Despesas</b>, coloque descrição, quem pagou, valor e participantes.<br/>
-        3) Em <b>Resumo</b>, veja quem paga pra quem e copie o texto.
+        <b>Como funciona o cálculo (correto):</b><br/>
+        • Cada despesa é rateada <b>somente</b> entre os participantes marcados.<br/>
+        • Quem pagou recebe o excedente acima da sua cota naquela despesa.<br/>
+        • O resumo soma tudo e gera “quem paga pra quem” para zerar os saldos.
       </div>
       <div class="hr"></div>
       <div class="tiny">
-        <b>Transparência:</b> o JSON contém todas as despesas. Qualquer pessoa pode importar e conferir.
+        <b>Transparência:</b> ao baixar o JSON, qualquer pessoa pode importar e conferir os gastos.
       </div>
     </div>
   </div>
@@ -385,16 +364,16 @@
 
 <script>
 (function(){
-  const LS_KEY = "racha_clear_v1";
+  const LS_KEY = "racha_clear_pix_v1";
   const $ = (id)=>document.getElementById(id);
   const toastEl = $("toast");
   const alertEl = $("alert");
 
   const state = {
-    groupName:"Exemplo",
-    currency:"€",
-    people:[],
-    expenses:[]
+    groupName:"Grupo",
+    currency:"R$",
+    people:[],      // {id,name,pay}
+    expenses:[]     // {id,desc,date,payerId,amountCents,splitType,participants:[{personId,included,weight}]}
   };
 
   function showToast(msg){
@@ -407,6 +386,7 @@
     alertEl.style.display = msg ? "block" : "none";
   }
   function today(){ return new Date().toISOString().slice(0,10); }
+  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 
   function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
   function load(){
@@ -420,7 +400,6 @@
       .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
       .replaceAll('"',"&quot;").replaceAll("'","&#39;");
   }
-  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 
   function toCents(v){
     const s = String(v ?? "").trim().replace(/\./g,"").replace(",",".");
@@ -448,63 +427,6 @@
   }
   document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>setTab(t.dataset.tab)));
 
-  // Render People
-  function renderPeople(){
-    const list = $("peopleList");
-    const empty = $("emptyPeople");
-    list.innerHTML = "";
-    if(!state.people.length){ empty.style.display="block"; }
-    else empty.style.display="none";
-
-    state.people.forEach(p=>{
-      const item = document.createElement("div");
-      item.className="card";
-      item.style.margin="10px 0";
-      item.style.boxShadow="none";
-      item.innerHTML = `
-        <div class="row">
-          <div style="flex:1.2">
-            <label>Nome</label>
-            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
-          </div>
-          <div style="flex:.6">
-            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
-          </div>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-
-    list.querySelectorAll("[data-person-name]").forEach(inp=>{
-      inp.addEventListener("input",(e)=>{
-        const id = e.target.getAttribute("data-person-name");
-        const p = state.people.find(x=>x.id===id);
-        if(!p) return;
-        p.name = e.target.value.trim() || "Sem nome";
-        save();
-        renderPayerOptions();
-        renderParticipants();
-        renderExpenses();
-        updateSummary();
-      });
-    });
-
-    list.querySelectorAll("[data-del-person]").forEach(btn=>{
-      btn.addEventListener("click",()=>{
-        const id = btn.getAttribute("data-del-person");
-        state.people = state.people.filter(p=>p.id!==id);
-        // remove from expenses
-        state.expenses.forEach(ex=>{
-          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
-          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
-        });
-        save();
-        renderAll();
-        showToast("Pessoa removida.");
-      });
-    });
-  }
-
   // Payer options
   function renderPayerOptions(){
     const sel = $("expPayer");
@@ -525,13 +447,7 @@
     if(!sel.value) sel.value = state.people[0].id;
   }
 
-  // Participants (draft)
-  function draftParticipants(){
-    const map = new Map(state.people.map(p=>[p.id, {personId:p.id, included:true, weight:1}]));
-    // keep current toggles if exist in DOM via dataset
-    return Array.from(map.values());
-  }
-
+  // Participants UI
   function renderParticipants(){
     const box = $("participants");
     box.innerHTML = "";
@@ -555,12 +471,97 @@
     });
   }
 
-  // Expenses
+  function getSelectedParticipants(){
+    const split = $("splitType").value;
+    const included = [];
+    document.querySelectorAll("#participants [data-inc]").forEach(ch=>{
+      if(ch.checked){
+        const pid = ch.getAttribute("data-inc");
+        const wInp = document.querySelector(`#participants [data-w="${pid}"]`);
+        const w = split==="weights" ? Math.max(0, Math.round(Number(wInp?.value ?? 1))) : 1;
+        included.push({personId:pid, included:true, weight:w});
+      }
+    });
+    return included;
+  }
+
+  // People render (with pay field)
+  function renderPeople(){
+    const list = $("peopleList");
+    const empty = $("emptyPeople");
+    list.innerHTML = "";
+    if(!state.people.length){ empty.style.display="block"; }
+    else empty.style.display="none";
+
+    state.people.forEach(p=>{
+      const item = document.createElement("div");
+      item.className="card";
+      item.style.margin="10px 0";
+      item.style.boxShadow="none";
+      item.innerHTML = `
+        <div class="row">
+          <div>
+            <label>Nome</label>
+            <input value="${escapeHtml(p.name)}" data-person-name="${p.id}" autocomplete="off"/>
+          </div>
+          <div>
+            <label>PIX / Conta / IBAN</label>
+            <input value="${escapeHtml(p.pay || "")}" data-person-pay="${p.id}" autocomplete="off"
+                   placeholder="Opcional — aparece no resumo para pagamento"/>
+          </div>
+          <div style="flex:.55">
+            <button class="btn bad" type="button" data-del-person="${p.id}">Excluir</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+    list.querySelectorAll("[data-person-name]").forEach(inp=>{
+      inp.addEventListener("input",(e)=>{
+        const id = e.target.getAttribute("data-person-name");
+        const p = state.people.find(x=>x.id===id);
+        if(!p) return;
+        p.name = e.target.value.trim() || "Sem nome";
+        save();
+        renderPayerOptions();
+        renderParticipants();
+        renderExpenses();
+        updateSummary();
+      });
+    });
+
+    list.querySelectorAll("[data-person-pay]").forEach(inp=>{
+      inp.addEventListener("input",(e)=>{
+        const id = e.target.getAttribute("data-person-pay");
+        const p = state.people.find(x=>x.id===id);
+        if(!p) return;
+        p.pay = e.target.value.trim();
+        save();
+        updateSummary();
+      });
+    });
+
+    list.querySelectorAll("[data-del-person]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id = btn.getAttribute("data-del-person");
+        state.people = state.people.filter(p=>p.id!==id);
+        state.expenses.forEach(ex=>{
+          ex.participants = (ex.participants||[]).filter(pp=>pp.personId!==id);
+          if(ex.payerId===id) ex.payerId = state.people[0]?.id || "";
+        });
+        save();
+        renderAll();
+        showToast("Pessoa removida.");
+      });
+    });
+  }
+
+  // Expenses render
   function renderExpenses(){
     const tbody = $("expensesTbody");
     const empty = $("emptyExpenses");
     tbody.innerHTML = "";
-
     if(!state.expenses.length){ empty.style.display="block"; }
     else empty.style.display="none";
 
@@ -601,20 +602,6 @@
     showAlert("");
   }
 
-  function getSelectedParticipants(){
-    const split = $("splitType").value;
-    const included = [];
-    document.querySelectorAll("#participants [data-inc]").forEach(ch=>{
-      if(ch.checked){
-        const pid = ch.getAttribute("data-inc");
-        const wInp = document.querySelector(`#participants [data-w="${pid}"]`);
-        const w = split==="weights" ? Math.max(0, Math.round(Number(wInp?.value ?? 1))) : 1;
-        included.push({personId:pid, included:true, weight:w});
-      }
-    });
-    return included;
-  }
-
   function validateExpense(desc, amountCents, payerId, participants){
     clearInvalid();
     if(!state.people.length){
@@ -623,7 +610,7 @@
     }
     if(!desc){
       $("expDesc").classList.add("invalid");
-      showAlert("⚠️ Coloque uma descrição (ex.: Jantar).");
+      showAlert("⚠️ Descrição obrigatória.");
       $("expDesc").focus();
       return false;
     }
@@ -638,7 +625,7 @@
       return false;
     }
     if(!participants.length){
-      showAlert("⚠️ Selecione pelo menos 1 participante.");
+      showAlert("⚠️ Marque pelo menos 1 participante.");
       return false;
     }
     if($("splitType").value==="weights"){
@@ -651,13 +638,14 @@
     return true;
   }
 
-  // Core: balances + settlement
+  // Core: balances (by expense participants) + settlement
   function computeBalances(){
     const bal = new Map(state.people.map(p=>[p.id, 0]));
 
     state.expenses.forEach(ex=>{
       const amount = ex.amountCents || 0;
-      // payer gets credit
+
+      // crédito do pagador
       bal.set(ex.payerId, (bal.get(ex.payerId)||0) + amount);
 
       const parts = (ex.participants||[]).filter(p=>p.included);
@@ -667,7 +655,7 @@
         const totalW = parts.reduce((s,p)=> s + (Number(p.weight)||0), 0);
         if(totalW<=0) return;
 
-        // share distribution with rounding fairness
+        // distribuição com arredondamento
         const shares = parts.map(p=> Math.floor(amount * ((Number(p.weight)||0)/totalW)));
         let base = shares.reduce((a,b)=>a+b,0);
         let rem = amount - base;
@@ -676,8 +664,8 @@
         parts.forEach((p,i)=>{
           bal.set(p.personId, (bal.get(p.personId)||0) - shares[i]);
         });
-
       } else {
+        // igual entre os participantes marcados
         const n = parts.length;
         const share = Math.floor(amount / n);
         let rem = amount - (share*n);
@@ -715,10 +703,9 @@
 
   function updateSummary(){
     const total = state.expenses.reduce((s,e)=> s + (e.amountCents||0), 0);
-    const n = state.people.length || 0;
-    $("kpiTotal").textContent = n ? money(total) : "—";
-    $("kpiN").textContent = String(n || "—");
-    $("kpiEach").textContent = (n && total) ? money(Math.round(total/n)) : (n ? money(0) : "—");
+    $("kpiTotal").textContent = state.expenses.length ? money(total) : money(0);
+    $("kpiN").textContent = String(state.people.length);
+    $("kpiE").textContent = String(state.expenses.length);
 
     const balancesDiv = $("balances");
     const settlementDiv = $("settlement");
@@ -727,14 +714,14 @@
     settlementDiv.innerHTML = "";
     shareTextEl.value = "";
 
+    const peopleMap = new Map(state.people.map(p=>[p.id,p]));
     if(!state.people.length){
       balancesDiv.innerHTML = `<div class="tiny">Adicione pessoas para ver o resumo.</div>`;
       settlementDiv.innerHTML = `<div class="tiny">Sem pessoas ainda.</div>`;
-      shareTextEl.value = makeFunnyMessage([], [], total, n);
+      shareTextEl.value = makeShareText([], [], total);
       return;
     }
 
-    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
     const bal = computeBalances();
     const items = state.people
       .map(p=>({id:p.id, name:p.name, v:(bal.get(p.id)||0)}))
@@ -758,81 +745,83 @@
     `;
     balancesDiv.appendChild(t);
 
-    // settlement
     const transfers = computeSettlement(bal);
     if(!transfers.length){
-      settlementDiv.innerHTML = `<div class="tiny">Tudo certo: ninguém deve nada (milagre moderno).</div>`;
+      settlementDiv.innerHTML = `<div class="tiny">Sem transferências necessárias.</div>`;
     } else {
       const box = document.createElement("div");
       box.className="card";
       box.style.boxShadow="none";
       box.style.margin="0";
       box.innerHTML = transfers.map(tr=>{
+        const from = peopleMap.get(tr.from)?.name || "?";
+        const to = peopleMap.get(tr.to)?.name || "?";
         return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
-          <b>${escapeHtml(peopleMap.get(tr.from) || "?")}</b> paga <b>${escapeHtml(peopleMap.get(tr.to) || "?")}</b>
+          <b>${escapeHtml(from)}</b> paga <b>${escapeHtml(to)}</b>
           <span class="badge" style="margin-left:8px">${money(tr.amount)}</span>
         </div>`;
       }).join("");
       settlementDiv.appendChild(box);
     }
 
-    // share text (funny + clear)
-    shareTextEl.value = makeFunnyMessage(items, transfers, total, n);
+    shareTextEl.value = makeShareText(items, transfers, total);
   }
 
-  function makeFunnyMessage(balItems, transfers, total, n){
+  function makeShareText(balItems, transfers, total){
     const group = (state.groupName || "Racha").trim();
-    const cur = state.currency;
-
     const lines = [];
-    lines.push(`💸 *${group}* — Resumo do Racha`);
-    lines.push(`🧾 Total: ${money(total)} | 👥 Pessoas: ${n}`);
-    if(n>0) lines.push(`🧮 Média por pessoa (igual): ${money(Math.round(total/n))}`);
+    lines.push(`RACHA — ${group}`);
+    lines.push(`Total: ${money(total)} | Pessoas: ${state.people.length} | Despesas: ${state.expenses.length}`);
     lines.push("");
 
-    if(!n){
-      lines.push("Adiciona a galera primeiro senão nem o Excel salva 😅");
-      return lines.join("\n");
-    }
-
-    lines.push("📊 *Saldos (quem recebe / quem paga)*");
-    const top = balItems.slice(0, Math.min(8, balItems.length));
-    top.forEach(it=>{
+    lines.push("Saldos:");
+    balItems.forEach(it=>{
       const tag = it.v>0 ? "recebe" : (it.v<0 ? "paga" : "zerado");
-      const emoji = it.v>0 ? "🟢" : (it.v<0 ? "🔴" : "⚪");
-      lines.push(`${emoji} ${it.name}: ${money(it.v)} (${tag})`);
+      lines.push(`- ${it.name}: ${money(it.v)} (${tag})`);
     });
-    if(balItems.length>8) lines.push(`… e mais ${balItems.length-8} pessoa(s)`);
 
     lines.push("");
-    lines.push("🔁 *Quem paga pra quem (pra ninguém chorar no final)*");
-
+    lines.push("Transferências (quem paga pra quem):");
     if(!transfers.length){
-      lines.push("🎉 Ninguém deve nada. A paz reina (por enquanto).");
+      lines.push("- Nenhuma (tudo zerado).");
     } else {
-      transfers.forEach(t=>{
-        lines.push(`➡️ ${nameById(t.from)} paga ${money(t.amount)} para ${nameById(t.to)}`);
+      transfers.forEach(tr=>{
+        const from = state.people.find(p=>p.id===tr.from)?.name || "?";
+        const toObj = state.people.find(p=>p.id===tr.to);
+        const toName = toObj?.name || "?";
+        lines.push(`- ${from} -> ${toName}: ${money(tr.amount)}`);
       });
     }
 
-    lines.push("");
-    lines.push("🪙 Regra de ouro: pagou? marca aqui. não marcou? não aconteceu 😌");
-    lines.push("📎 Se quiser auditar, pede o JSON (sem drama).");
-    return lines.join("\n");
+    // Dados de pagamento: somente quem vai receber (saldo positivo)
+    const receivers = balItems.filter(x=>x.v>0).map(x=>{
+      const p = state.people.find(pp=>pp.id===x.id);
+      return {name:x.name, pay:(p?.pay||"").trim(), amount:x.v};
+    });
 
-    function nameById(id){
-      const p = state.people.find(x=>x.id===id);
-      return p ? p.name : "?";
+    lines.push("");
+    lines.push("Dados para pagamento (recebedores):");
+    if(!receivers.length){
+      lines.push("- (ninguém recebe)");
+    } else {
+      receivers.forEach(r=>{
+        const payLine = r.pay ? r.pay : "(sem PIX/conta informado)";
+        lines.push(`- ${r.name} — ${payLine}`);
+      });
+    }
+
+    return lines.join("\n");
+  }
+
+  async function copy(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast("Resumo copiado.");
+    }catch{
+      prompt("Copie o resumo:", text);
     }
   }
 
-  // Copy helpers
-  async function copy(text){
-    try{ await navigator.clipboard.writeText(text); showToast("Copiado ✅"); }
-    catch{ prompt("Copie:", text); }
-  }
-
-  // Export/Import
   function exportJson(){
     const payload = { groupName: state.groupName, currency: state.currency, people: state.people, expenses: state.expenses };
     const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
@@ -860,7 +849,7 @@
         state.expenses  = Array.isArray(obj.expenses) ? obj.expenses : [];
         save();
         renderAll();
-        showToast("Importado ✅");
+        showToast("Importado.");
       }catch{
         showToast("JSON inválido.");
       }
@@ -869,15 +858,18 @@
   }
 
   // Events
-  $("groupName").addEventListener("input", ()=>{ state.groupName = $("groupName").value.trim()||"Racha"; save(); updateSummary(); });
+  $("groupName").addEventListener("input", ()=>{ state.groupName = $("groupName").value.trim()||"Grupo"; save(); updateSummary(); });
   $("currency").addEventListener("change", ()=>{ state.currency = $("currency").value; save(); renderExpenses(); updateSummary(); });
 
   $("splitType").addEventListener("change", ()=>renderParticipants());
+
   $("btnAddPerson").addEventListener("click", ()=>{
     const name = $("personName").value.trim();
+    const pay = $("personPay").value.trim();
     if(!name) return showToast("Digite um nome.");
-    state.people.push({id:uid(), name});
+    state.people.push({id:uid(), name, pay});
     $("personName").value="";
+    $("personPay").value="";
     save();
     renderAll();
     showToast("Pessoa adicionada.");
@@ -888,8 +880,7 @@
     $("expAmount").value="";
     $("splitType").value="equal";
     $("expDate").value=today();
-    showAlert("");
-    ["expDesc","expAmount"].forEach(id=>$(id).classList.remove("invalid"));
+    clearInvalid();
     renderParticipants();
   });
 
@@ -901,14 +892,7 @@
     const splitType = $("splitType").value;
     const participants = getSelectedParticipants();
 
-    $("expDesc").classList.remove("invalid");
-    $("expAmount").classList.remove("invalid");
-
-    if(!validateExpense(desc, amountCents, payerId, participants)){
-      if(!desc) $("expDesc").classList.add("invalid");
-      if(amountCents==null || amountCents<=0) $("expAmount").classList.add("invalid");
-      return;
-    }
+    if(!validateExpense(desc, amountCents, payerId, participants)) return;
 
     state.expenses.push({
       id:uid(),
@@ -921,20 +905,17 @@
     save();
     renderExpenses();
     updateSummary();
-    showToast("Despesa adicionada ✅");
+    showToast("Despesa adicionada.");
 
-    // mantém descrição e valor como calculadora? (você pode preferir limpar)
     $("expDesc").value="";
     $("expAmount").value="";
     showAlert("");
   });
 
-  $("btnCopyFunny").addEventListener("click", ()=>{ setTab("resumo"); copy($("shareText").value || ""); });
-  $("btnCopyFunny2").addEventListener("click", ()=>copy($("shareText").value || ""));
+  $("btnCopySummary").addEventListener("click", ()=>{ setTab("resumo"); copy($("shareText").value || ""); });
   $("btnCopyText").addEventListener("click", ()=>copy($("shareText").value || ""));
-
   $("btnExport").addEventListener("click", exportJson);
-  $("btnDownloadJson2").addEventListener("click", exportJson);
+  $("btnExport2").addEventListener("click", exportJson);
   $("btnImport").addEventListener("click", importJson);
 
   $("btnReset").addEventListener("click", ()=>{
@@ -943,9 +924,50 @@
     location.reload();
   });
 
+  // Expenses table delete
+  function hookExpenseDeletes(){
+    document.querySelectorAll("[data-del-exp]").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id = btn.getAttribute("data-del-exp");
+        state.expenses = state.expenses.filter(e=>e.id!==id);
+        save(); renderExpenses(); updateSummary();
+      });
+    });
+  }
+
+  // Override renderExpenses to wire delete buttons
+  const _renderExpenses = renderExpenses;
+  renderExpenses = function(){
+    const tbody = $("expensesTbody");
+    const empty = $("emptyExpenses");
+    tbody.innerHTML = "";
+    if(!state.expenses.length){ empty.style.display="block"; }
+    else empty.style.display="none";
+
+    const peopleMap = new Map(state.people.map(p=>[p.id,p.name]));
+    const rows = [...state.expenses].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+    rows.forEach(ex=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(ex.date || "—")}</td>
+        <td>${escapeHtml(ex.desc || "—")}</td>
+        <td>${escapeHtml(peopleMap.get(ex.payerId) || "—")}</td>
+        <td><span class="badge">${money(ex.amountCents||0)}</span></td>
+        <td>
+          <div class="t-actions">
+            <button class="mini" type="button" data-del-exp="${ex.id}">Excluir</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    hookExpenseDeletes();
+  };
+
   function renderAll(){
-    $("groupName").value = state.groupName || "Racha";
-    $("currency").value = state.currency || "€";
+    $("groupName").value = state.groupName || "Grupo";
+    $("currency").value = state.currency || "R$";
     if(!$("expDate").value) $("expDate").value = today();
 
     renderPeople();
@@ -957,16 +979,14 @@
 
   // Init
   load();
-
   if(!state.people.length){
-    // demo leve
     state.groupName = "Exemplo";
-    state.currency = "€";
+    state.currency = "R$";
     state.people = [
-      {id:uid(), name:"Ernandes"},
-      {id:uid(), name:"Claumir"},
-      {id:uid(), name:"Áurea"},
-      {id:uid(), name:"Ana Paula"},
+      {id:uid(), name:"Claúmir", pay:""},
+      {id:uid(), name:"Ernandes", pay:""},
+      {id:uid(), name:"Pessoa 3", pay:""},
+      {id:uid(), name:"Pessoa 4", pay:""},
     ];
     save();
   }
